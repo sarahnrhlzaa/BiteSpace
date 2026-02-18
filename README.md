@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CodeIgniter 4 Application Starter
 
 ## What is CodeIgniter?
@@ -67,3 +68,7 @@ Additionally, make sure that the following extensions are enabled in your PHP:
 - json (enabled by default - don't turn it off)
 - [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
 - [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+=======
+# BiteSpace
+BiteSpace is a modern web-based restaurant management system built with CodeIgniter 4 to manage menus, orders, tables, and transactions efficiently.
+>>>>>>> 0b407ce76d647eb953c2156b88579da93e8e0744
