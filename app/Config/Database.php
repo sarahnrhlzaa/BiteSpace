@@ -13,7 +13,7 @@ class Database extends Config
      * The directory that holds the Migrations and Seeds directories.
      */
     public string $filesPath = APPPATH . 'Database' . DIRECTORY_SEPARATOR;
-
+    
     /**
      * Lets you choose which connection group to use if no other is specified.
      */
