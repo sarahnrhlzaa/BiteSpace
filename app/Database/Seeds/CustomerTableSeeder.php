@@ -35,6 +35,6 @@ class CustomerTableSeeder extends Seeder
             ],
         ];
 
-        $this->db->table('customers')->insertBatch($data);
+        $this->db->table('customer')->insertBatch($data);
     }
 }
