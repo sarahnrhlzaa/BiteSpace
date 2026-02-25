@@ -14,6 +14,8 @@
             --tosca:   #2EC4B6;
             --purple:  #9B89C4;
             --yellow:  #FFD166;
+            --white:   #FFFFFF;
+            --deep-purple: #39007e;
             --text-dim: rgba(255,255,255,0.5);
         }
 

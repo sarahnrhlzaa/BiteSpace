@@ -1,36 +1,243 @@
 <style>
-    .form-card { background: #fff; border-radius: 16px; border: 1px solid var(--border); overflow: hidden; animation: fadeUp 0.4s ease both; }
+    /* ══ PALETTE: BiteSpace
+       --tosca  : #2EC4B6
+       --sky    : #4BA3C3
+       --yellow : #FFD166
+       --navy   : #0D1B3E
+    ══════════════════════════════════ */
+
+    .form-card {
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        animation: fadeUp 0.4s ease both;
+    }
     .form-card:nth-child(2) { animation-delay: 0.05s; }
-    .form-card-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-    .form-card-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .form-card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; color: var(--dark); }
+
+    .form-card-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; gap: 10px;
+    }
+
+    .form-card-icon {
+        width: 36px; height: 36px;
+        border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 16px;
+    }
+
+    .form-card-title {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 15px;
+        color: var(--dark);
+    }
+
     .form-card-body { padding: 24px; }
-    .field-label { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 12.5px; color: var(--dark); margin-bottom: 7px; display: block; }
+
+    /* ── Fields ── */
+    .field-label {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 600;
+        font-size: 12.5px;
+        color: var(--dark);
+        margin-bottom: 7px;
+        display: block;
+    }
+
     .field-wrap { position: relative; margin-bottom: 18px; }
-    .field-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; pointer-events: none; }
-    .form-input { width: 100%; height: 46px; padding-left: 42px; padding-right: 14px; border: 1.5px solid var(--border); border-radius: 11px; font-size: 13.5px; font-family: 'DM Sans', sans-serif; color: var(--dark); background: #FAFBFD; transition: all 0.2s; }
-    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(232,98,42,0.1); background: #fff; outline: none; }
-    .form-input.readonly-field { background: #F5F6FA; color: var(--text-muted); cursor: not-allowed; }
-    .toggle-eye { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; padding: 4px; }
-    .toggle-eye:hover { color: var(--primary); }
-    .btn-save { height: 46px; padding: 0 28px; background: var(--primary); color: #fff; border: none; border-radius: 11px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; }
-    .btn-save:hover { background: var(--primary-dk); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(232,98,42,0.3); }
+
+    .field-icon {
+        position: absolute;
+        left: 14px; top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        font-size: 16px;
+        pointer-events: none;
+    }
+
+    .form-input {
+        width: 100%;
+        height: 46px;
+        padding-left: 42px;
+        padding-right: 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 11px;
+        font-size: 13.5px;
+        font-family: 'DM Sans', sans-serif;
+        color: var(--dark);
+        background: #FAFBFD;
+        transition: all 0.2s;
+    }
+
+    .form-input:focus {
+        border-color: var(--tosca);
+        box-shadow: 0 0 0 3px rgba(46,196,182,0.12);
+        background: #fff;
+        outline: none;
+    }
+
+    .form-input.readonly-field {
+        background: #F5F6FA;
+        color: var(--text-muted);
+        cursor: not-allowed;
+    }
+
+    /* toggle eye */
+    .toggle-eye {
+        position: absolute;
+        right: 12px; top: 50%;
+        transform: translateY(-50%);
+        background: none; border: none;
+        color: var(--text-muted);
+        font-size: 16px;
+        cursor: pointer;
+        padding: 4px;
+        transition: color 0.2s;
+    }
+    .toggle-eye:hover { color: var(--tosca); }
+
+    /* ── Save button ── */
+    .btn-save {
+        height: 46px;
+        padding: 0 28px;
+        background: linear-gradient(135deg, var(--tosca), var(--sky));
+        color: #fff;
+        border: none;
+        border-radius: 11px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(46,196,182,0.3);
+    }
+    .btn-save:hover {
+        filter: brightness(1.06);
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(46,196,182,0.35);
+    }
     .btn-save:active { transform: translateY(0); }
-    .alert-err { background:#FFF1F0; border:1px solid #FFCCC7; color:#C0392B; border-radius:11px; padding:12px 16px; margin-bottom:18px; display:flex; gap:10px; align-items:flex-start; font-size:13.5px; }
-    .strength-bar { height: 4px; border-radius: 4px; background: #EEE; margin-top: 8px; overflow: hidden; }
-    .strength-fill { height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s; width: 0%; }
-    .strength-text { font-size: 11px; margin-top: 4px; font-weight: 600; }
-    .req-item { display: flex; align-items: center; color: var(--text-muted); transition: color 0.2s; font-size: 12.5px; margin-bottom: 6px; }
+
+    /* green save (password) */
+    .btn-save-green {
+        height: 46px;
+        padding: 0 28px;
+        background: #10B981;
+        color: #fff;
+        border: none;
+        border-radius: 11px;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(16,185,129,0.25);
+    }
+    .btn-save-green:hover {
+        background: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(16,185,129,0.3);
+    }
+
+    /* ── Alerts ── */
+    .alert-err {
+        background: #FFF1F0;
+        border: 1px solid #FFCCC7;
+        color: #C0392B;
+        border-radius: 11px;
+        padding: 12px 16px;
+        margin-bottom: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 13.5px;
+    }
+
+    /* ── Password strength ── */
+    .strength-bar {
+        height: 4px;
+        border-radius: 4px;
+        background: #EEE;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+    .strength-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s, background 0.3s;
+        width: 0%;
+    }
+    .strength-text {
+        font-size: 11px;
+        margin-top: 4px;
+        font-weight: 600;
+    }
+
+    /* ── Requirement checklist ── */
+    .req-item {
+        display: flex;
+        align-items: center;
+        color: var(--text-muted);
+        transition: color 0.2s;
+        font-size: 12.5px;
+        margin-bottom: 6px;
+    }
     .req-item i { font-size: 11px; margin-right: 6px; }
     .req-item.valid { color: #10B981; }
     .req-item.valid i::before { content: "\f270"; }
-    @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Info box ── */
+    .info-box {
+        background: rgba(46,196,182,0.07);
+        border: 1px solid rgba(46,196,182,0.22);
+        border-radius: 11px;
+        padding: 13px 16px;
+        margin-bottom: 22px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    .info-box i { color: var(--tosca); font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+    .info-box p { font-size: 13px; color: #0e6860; line-height: 1.6; margin: 0; }
+
+    /* ── Syarat box ── */
+    .syarat-box {
+        background: #F8F9FA;
+        border-radius: 10px;
+        padding: 14px 16px;
+        margin-bottom: 22px;
+    }
+    .syarat-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .syarat-title i { color: var(--tosca); }
+
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(14px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 </style>
 
 <!-- Breadcrumb -->
 <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:13px; color:var(--text-muted);">
-    <a href="<?= base_url('profile') ?>" style="color:var(--primary); text-decoration:none; font-weight:600;">
-        <i class="bi bi-person-circle me-1"></i>Profil
+    <a href="<?= base_url('profile') ?>"
+       style="color:var(--tosca); text-decoration:none; font-weight:600; display:flex; align-items:center; gap:5px;">
+        <i class="bi bi-person-circle"></i> Profil
     </a>
     <i class="bi bi-chevron-right" style="font-size:11px;"></i>
     <span>Edit Profil</span>
@@ -38,12 +245,12 @@
 
 <div class="row g-4">
 
-    <!-- Edit Profil -->
+    <!-- ── KIRI: Edit Profil ── -->
     <div class="col-lg-5">
         <div class="form-card">
             <div class="form-card-header">
-                <div class="form-card-icon" style="background:var(--primary-lt);">
-                    <i class="bi bi-pencil-square" style="color:var(--primary);"></i>
+                <div class="form-card-icon" style="background:rgba(46,196,182,0.12);">
+                    <i class="bi bi-pencil-square" style="color:var(--tosca);"></i>
                 </div>
                 <div class="form-card-title">Edit Profil</div>
             </div>
@@ -56,10 +263,19 @@
                     </div>
                 <?php endif; ?>
 
+                <?php if (session()->getFlashdata('success')): ?>
+                    <div style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; border-radius:11px; padding:12px 16px; margin-bottom:18px; display:flex; gap:10px; align-items:center; font-size:13.5px;">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <?= session()->getFlashdata('success') ?>
+                    </div>
+                <?php endif; ?>
+
                 <form action="<?= base_url('profile/update') ?>" method="POST">
                     <?= csrf_field() ?>
 
-                    <label class="field-label">Nama Lengkap <span style="color:var(--primary);">*</span></label>
+                    <label class="field-label">
+                        Nama Lengkap <span style="color:var(--tosca);">*</span>
+                    </label>
                     <div class="field-wrap">
                         <i class="bi bi-person field-icon"></i>
                         <input type="text" name="nama_lengkap" class="form-input"
@@ -75,7 +291,9 @@
                             placeholder="Email (opsional)">
                     </div>
 
-                    <label class="field-label" style="color:var(--text-muted);">Username <span style="font-weight:400;">(tidak bisa diubah)</span></label>
+                    <label class="field-label" style="color:var(--text-muted);">
+                        Username <span style="font-weight:400;">(tidak bisa diubah)</span>
+                    </label>
                     <div class="field-wrap">
                         <i class="bi bi-at field-icon"></i>
                         <input type="text" class="form-input readonly-field"
@@ -83,8 +301,9 @@
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mt-2">
-                        <a href="<?= base_url('profile') ?>" style="color:var(--text-muted); font-size:13px; text-decoration:none;">
-                            <i class="bi bi-arrow-left me-1"></i> Batal
+                        <a href="<?= base_url('profile') ?>"
+                           style="color:var(--text-muted); font-size:13px; text-decoration:none; display:flex; align-items:center; gap:5px;">
+                            <i class="bi bi-arrow-left"></i> Batal
                         </a>
                         <button type="submit" class="btn-save">
                             <i class="bi bi-check-lg"></i> Simpan
@@ -95,7 +314,7 @@
         </div>
     </div>
 
-    <!-- Ganti Password -->
+    <!-- ── KANAN: Ganti Password ── -->
     <div class="col-lg-7">
         <div class="form-card" id="ganti-password">
             <div class="form-card-header">
@@ -113,46 +332,63 @@
                     </div>
                 <?php endif; ?>
 
-                <div style="background:var(--primary-lt); border:1px solid rgba(232,98,42,0.2); border-radius:11px; padding:13px 16px; margin-bottom:22px; display:flex; gap:10px; align-items:flex-start;">
-                    <i class="bi bi-info-circle-fill" style="color:var(--primary); font-size:15px; margin-top:1px; flex-shrink:0;"></i>
-                    <div style="font-size:13px; color:#8B4513; line-height:1.6;">
+                <!-- Info box tosca -->
+                <div class="info-box">
+                    <i class="bi bi-info-circle-fill"></i>
+                    <p>
                         <?php if ($user['role'] === 'kasir'): ?>
                             Ganti password yang diberikan admin dengan password pilihanmu sendiri.
                         <?php else: ?>
                             Ganti password secara berkala untuk menjaga keamanan akun.
                         <?php endif; ?>
-                    </div>
+                    </p>
                 </div>
 
                 <form action="<?= base_url('profile/change-password') ?>" method="POST">
                     <?= csrf_field() ?>
 
-                    <label class="field-label">Password Saat Ini <span style="color:var(--primary);">*</span></label>
+                    <!-- Password lama -->
+                    <label class="field-label">
+                        Password Saat Ini <span style="color:var(--tosca);">*</span>
+                    </label>
                     <div class="field-wrap">
                         <i class="bi bi-lock field-icon"></i>
-                        <input type="password" name="password_lama" id="passLama" class="form-input" placeholder="Masukkan password saat ini" required>
+                        <input type="password" name="password_lama" id="passLama"
+                            class="form-input" placeholder="Masukkan password saat ini" required>
                         <button type="button" class="toggle-eye" onclick="toggleEye('passLama','eyeLama')">
                             <i class="bi bi-eye" id="eyeLama"></i>
                         </button>
                     </div>
 
-                    <label class="field-label">Password Baru <span style="color:var(--primary);">*</span></label>
+                    <!-- Password baru -->
+                    <label class="field-label">
+                        Password Baru <span style="color:var(--tosca);">*</span>
+                    </label>
                     <div class="field-wrap" style="margin-bottom:6px;">
                         <i class="bi bi-lock-fill field-icon"></i>
-                        <input type="password" name="password_baru" id="passBaru" class="form-input"
-                            placeholder="Minimal 6 karakter" required oninput="checkStrength(this.value)">
+                        <input type="password" name="password_baru" id="passBaru"
+                            class="form-input" placeholder="Minimal 6 karakter" required
+                            oninput="checkStrength(this.value)">
                         <button type="button" class="toggle-eye" onclick="toggleEye('passBaru','eyeBaru')">
                             <i class="bi bi-eye" id="eyeBaru"></i>
                         </button>
                     </div>
-                    <div class="strength-bar mb-1"><div class="strength-fill" id="strengthFill"></div></div>
-                    <div class="strength-text mb-3" id="strengthText" style="color:var(--text-muted);">Belum diisi</div>
+                    <div class="strength-bar mb-1">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div class="strength-text mb-3" id="strengthText" style="color:var(--text-muted);">
+                        Belum diisi
+                    </div>
 
-                    <label class="field-label">Konfirmasi Password Baru <span style="color:var(--primary);">*</span></label>
+                    <!-- Konfirmasi -->
+                    <label class="field-label">
+                        Konfirmasi Password Baru <span style="color:var(--tosca);">*</span>
+                    </label>
                     <div class="field-wrap">
                         <i class="bi bi-lock-fill field-icon"></i>
-                        <input type="password" name="password_konfirmasi" id="passKonfirm" class="form-input"
-                            placeholder="Ulangi password baru" required oninput="checkMatch()">
+                        <input type="password" name="password_konfirmasi" id="passKonfirm"
+                            class="form-input" placeholder="Ulangi password baru" required
+                            oninput="checkMatch()">
                         <button type="button" class="toggle-eye" onclick="toggleEye('passKonfirm','eyeKonfirm')">
                             <i class="bi bi-eye" id="eyeKonfirm"></i>
                         </button>
@@ -160,17 +396,23 @@
                     <div id="matchMsg" style="font-size:12px; margin-top:-12px; margin-bottom:16px;"></div>
 
                     <!-- Syarat -->
-                    <div style="background:#F8F9FA; border-radius:10px; padding:14px 16px; margin-bottom:22px;">
-                        <div style="font-size:12px; font-weight:600; color:var(--dark); margin-bottom:10px;">
-                            <i class="bi bi-shield-check me-1" style="color:var(--primary);"></i> Syarat Password
+                    <div class="syarat-box">
+                        <div class="syarat-title">
+                            <i class="bi bi-shield-check"></i> Syarat Password
                         </div>
-                        <div class="req-item" id="req-length"><i class="bi bi-circle"></i> Minimal 6 karakter</div>
-                        <div class="req-item" id="req-upper"><i class="bi bi-circle"></i> Mengandung huruf besar</div>
-                        <div class="req-item" id="req-number"><i class="bi bi-circle"></i> Mengandung angka</div>
+                        <div class="req-item" id="req-length">
+                            <i class="bi bi-circle"></i> Minimal 6 karakter
+                        </div>
+                        <div class="req-item" id="req-upper">
+                            <i class="bi bi-circle"></i> Mengandung huruf besar
+                        </div>
+                        <div class="req-item" id="req-number">
+                            <i class="bi bi-circle"></i> Mengandung angka
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn-save" style="background:#10B981;">
+                        <button type="submit" class="btn-save-green">
                             <i class="bi bi-shield-check"></i> Ganti Password
                         </button>
                     </div>
@@ -183,9 +425,9 @@
 
 <script>
 function toggleEye(inputId, iconId) {
-    const inp = document.getElementById(inputId);
+    const inp  = document.getElementById(inputId);
     const icon = document.getElementById(iconId);
-    inp.type = inp.type === 'password' ? 'text' : 'password';
+    inp.type   = inp.type === 'password' ? 'text' : 'password';
     icon.className = inp.type === 'password' ? 'bi bi-eye' : 'bi bi-eye-slash';
 }
 
@@ -201,20 +443,20 @@ function checkStrength(val) {
     setReq('req-upper',  hasUpper);
     setReq('req-number', hasNumber);
 
-    let score = [hasLen, hasUpper, hasNumber, hasSymbol, val.length >= 10].filter(Boolean).length;
+    const score = [hasLen, hasUpper, hasNumber, hasSymbol, val.length >= 10].filter(Boolean).length;
     const levels = [
-        { pct:'0%',   color:'#EEE',    label:'Belum diisi',   tc:'#AAA' },
-        { pct:'25%',  color:'#EF4444', label:'Lemah',         tc:'#EF4444' },
-        { pct:'50%',  color:'#F59E0B', label:'Sedang',        tc:'#F59E0B' },
-        { pct:'75%',  color:'#3B82F6', label:'Cukup Kuat',    tc:'#3B82F6' },
-        { pct:'90%',  color:'#10B981', label:'Kuat',          tc:'#10B981' },
-        { pct:'100%', color:'#059669', label:'💪 Sangat Kuat',tc:'#059669' },
+        { pct:'0%',   color:'#EEE',    label:'Belum diisi',    tc:'#AAA'     },
+        { pct:'25%',  color:'#EF4444', label:'Lemah',          tc:'#EF4444'  },
+        { pct:'50%',  color:'#F59E0B', label:'Sedang',         tc:'#F59E0B'  },
+        { pct:'75%',  color:'#4BA3C3', label:'Cukup Kuat',     tc:'#4BA3C3'  },
+        { pct:'90%',  color:'#2EC4B6', label:'Kuat',           tc:'#2EC4B6'  },
+        { pct:'100%', color:'#0e9088', label:'💪 Sangat Kuat', tc:'#0e9088'  },
     ];
     const idx = val.length === 0 ? 0 : Math.min(score, 5);
-    fill.style.width = levels[idx].pct;
+    fill.style.width      = levels[idx].pct;
     fill.style.background = levels[idx].color;
-    text.textContent = levels[idx].label;
-    text.style.color = levels[idx].tc;
+    text.textContent      = levels[idx].label;
+    text.style.color      = levels[idx].tc;
 }
 
 function setReq(id, valid) {
@@ -233,8 +475,10 @@ function checkMatch() {
         : '<span style="color:#EF4444;"><i class="bi bi-x-circle-fill me-1"></i>Password tidak cocok</span>';
 }
 
-// Scroll ke ganti password kalau ada hash
+// Scroll ke ganti password jika ada hash
 if (window.location.hash === '#ganti-password') {
-    setTimeout(() => document.getElementById('ganti-password').scrollIntoView({ behavior: 'smooth' }), 300);
+    setTimeout(() => {
+        document.getElementById('ganti-password')?.scrollIntoView({ behavior: 'smooth' });
+    }, 300);
 }
 </script>

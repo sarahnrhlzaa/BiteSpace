@@ -1,637 +1,452 @@
+<!-- views/dashboard/index.php -->
 <style>
-    .profile-hero {
-        background: linear-gradient(135deg, var(--dark) 0%, #2C3E6B 100%);
-        border-radius: 20px;
-        padding: 36px 40px;
+    /* ══ PALETTE
+       --navy:   #0D1B3E
+       --sky:    #4BA3C3
+       --tosca:  #2EC4B6
+       --purple: #9B89C4
+       --yellow: #FFD166
+       --deep:   #39007E (situational)
+    ══════════════════════════════════ */
+
+    .stat-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 22px 24px;
+        border: 1px solid var(--border);
         display: flex;
         align-items: center;
-        gap: 28px;
-        position: relative;
-        overflow: hidden;
-        margin-bottom: 24px;
-        animation: fadeUp 0.4s ease both;
+        gap: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+        color: inherit;
     }
-
-    .profile-hero::before {
-        content: '';
-        position: absolute;
-        width: 300px; height: 300px;
-        background: radial-gradient(circle, rgba(232,98,42,0.3) 0%, transparent 70%);
-        top: -80px; right: -60px;
-        pointer-events: none;
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(13,27,62,0.10);
+        color: inherit;
     }
-
-    .profile-hero::after {
-        content: '';
-        position: absolute;
-        width: 200px; height: 200px;
-        background: radial-gradient(circle, rgba(232,98,42,0.15) 0%, transparent 70%);
-        bottom: -60px; left: 200px;
-        pointer-events: none;
-    }
-
-    .avatar-hero {
-        width: 90px; height: 90px;
-        border-radius: 22px;
-        background: var(--primary);
+    .stat-icon {
+        width: 52px; height: 52px;
+        border-radius: 14px;
         display: flex; align-items: center; justify-content: center;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 800;
-        font-size: 36px;
-        color: #fff;
+        font-size: 22px;
         flex-shrink: 0;
-        position: relative;
-        z-index: 2;
-        box-shadow: 0 8px 24px rgba(232,98,42,0.4);
     }
-
-    .profile-hero-info { position: relative; z-index: 2; }
-
-    .profile-hero-name {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 800;
-        font-size: 26px;
-        color: #fff;
+    .stat-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
         margin-bottom: 4px;
     }
-
-    .profile-hero-meta {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .role-badge {
-        background: rgba(232,98,42,0.25);
-        border: 1px solid rgba(232,98,42,0.4);
-        color: #FFB899;
-        font-size: 12px;
-        font-weight: 700;
-        padding: 4px 12px;
-        border-radius: 8px;
+    .stat-value {
         font-family: 'Plus Jakarta Sans', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1;
+        margin-bottom: 4px;
     }
+    .stat-sub { font-size: 12px; color: var(--text-muted); }
 
-    .profile-hero-email {
-        font-size: 13px;
-        color: rgba(255,255,255,0.5);
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .profile-hero-joined {
-        font-size: 13px;
-        color: rgba(255,255,255,0.4);
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    /* Cards */
-    .form-card {
+    .section-card {
         background: #fff;
         border-radius: 16px;
         border: 1px solid var(--border);
         overflow: hidden;
-        animation: fadeUp 0.4s ease both;
     }
-
-    .form-card-header {
-        padding: 18px 24px;
+    .section-head {
+        padding: 18px 22px;
         border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
-        gap: 10px;
+        justify-content: space-between;
     }
-
-    .form-card-icon {
-        width: 36px; height: 36px;
-        border-radius: 10px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 16px;
-    }
-
-    .form-card-title {
+    .section-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-weight: 700;
         font-size: 15px;
         color: var(--dark);
-    }
-
-    .form-card-body { padding: 24px; }
-
-    /* Form styling */
-    .field-label {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 600;
-        font-size: 12.5px;
-        color: var(--dark);
-        margin-bottom: 7px;
-        display: block;
-    }
-
-    .field-wrap { position: relative; margin-bottom: 18px; }
-
-    .field-icon {
-        position: absolute;
-        left: 14px; top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-        font-size: 16px;
-        pointer-events: none;
-    }
-
-    .form-input {
-        width: 100%;
-        height: 46px;
-        padding-left: 42px;
-        padding-right: 14px;
-        border: 1.5px solid var(--border);
-        border-radius: 11px;
-        font-size: 13.5px;
-        font-family: 'DM Sans', sans-serif;
-        color: var(--dark);
-        background: #FAFBFD;
-        transition: all 0.2s;
-    }
-
-    .form-input:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(232,98,42,0.1);
-        background: #fff;
-        outline: none;
-    }
-
-    .form-input.readonly-field {
-        background: #F5F6FA;
-        color: var(--text-muted);
-        cursor: not-allowed;
-    }
-
-    .toggle-eye {
-        position: absolute;
-        right: 12px; top: 50%;
-        transform: translateY(-50%);
-        background: none; border: none;
-        color: var(--text-muted);
-        font-size: 16px;
-        cursor: pointer;
-        padding: 4px;
-    }
-
-    .toggle-eye:hover { color: var(--primary); }
-
-    .btn-save {
-        height: 46px;
-        padding: 0 28px;
-        background: var(--primary);
-        color: #fff;
-        border: none;
-        border-radius: 11px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 700;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-flex;
+        display: flex;
         align-items: center;
         gap: 8px;
     }
+    .section-body { padding: 20px 22px; }
 
-    .btn-save:hover {
-        background: var(--primary-dk);
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(232,98,42,0.3);
-    }
-
-    .btn-save:active { transform: translateY(0); }
-
-    /* Alert */
-    .alert-custom {
-        border-radius: 11px;
-        font-size: 13.5px;
-        padding: 12px 16px;
-        margin-bottom: 18px;
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        border: none;
-    }
-
-    .alert-success-c {
-        background: #ECFDF5;
-        border: 1px solid #A7F3D0;
-        color: #065F46;
-    }
-
-    .alert-danger-c {
-        background: #FFF1F0;
-        border: 1px solid #FFCCC7;
-        color: #C0392B;
-    }
-
-    /* Password strength */
-    .strength-bar {
-        height: 4px;
-        border-radius: 4px;
-        background: #EEE;
-        margin-top: 8px;
-        overflow: hidden;
-    }
-
-    .strength-fill {
-        height: 100%;
-        border-radius: 4px;
-        transition: width 0.3s, background 0.3s;
-        width: 0%;
-    }
-
-    .strength-text {
-        font-size: 11px;
-        margin-top: 4px;
-        font-weight: 600;
-    }
-
-    /* Info row */
-    .info-row {
-        display: flex;
-        align-items: center;
-        padding: 14px 0;
+    /* TABLE */
+    .trx-table { width: 100%; border-collapse: collapse; }
+    .trx-table th {
+        font-size: 11px; font-weight: 700; color: var(--text-muted);
+        text-transform: uppercase; letter-spacing: 0.8px;
+        padding: 0 12px 12px; text-align: left;
         border-bottom: 1px solid var(--border);
     }
+    .trx-table td {
+        padding: 13px 12px; font-size: 13.5px; color: var(--dark);
+        border-bottom: 1px solid #f5f5f7; vertical-align: middle;
+    }
+    .trx-table tr:last-child td { border-bottom: none; }
+    .trx-table tr:hover td { background: #f8fbff; }
 
-    .info-row:last-child { border-bottom: none; }
-
-    .info-row-label {
-        width: 140px;
-        font-size: 12.5px;
-        color: var(--text-muted);
-        font-weight: 500;
-        flex-shrink: 0;
+    .kode-badge {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 12px; font-weight: 700;
+        color: #0e9088;
+        background: rgba(46,196,182,0.10);
+        padding: 3px 10px; border-radius: 6px; white-space: nowrap;
     }
 
-    .info-row-value {
-        font-size: 14px;
-        color: var(--dark);
-        font-weight: 500;
-    }
+    .status-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+    .status-done      { background: #d1fae5; color: #065f46; }
+    .status-pending   { background: #fef3c7; color: #92400e; }
+    .status-process   { background: rgba(75,163,195,0.15); color: #1e5f7a; }
+    .status-cancelled { background: #fee2e2; color: #991b1b; }
 
-    .status-dot {
-        display: inline-block;
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        margin-right: 6px;
+    /* CALENDAR */
+    .calendar-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; text-align: center; }
+    .cal-day-name { font-size: 11px; font-weight: 700; color: var(--text-muted); padding: 6px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+    .cal-day {
+        aspect-ratio: 1; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px; font-weight: 500; color: var(--dark); cursor: default;
     }
-
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(14px); }
-        to   { opacity: 1; transform: translateY(0); }
+    /* has-trx → tosca tint */
+    .cal-day.has-trx {
+        background: rgba(46,196,182,0.13);
+        color: #0e9088;
+        font-weight: 700;
     }
+    /* today → navy */
+    .cal-day.today {
+        background: var(--navy);
+        color: #fff;
+        font-weight: 800;
+        box-shadow: 0 4px 10px rgba(13,27,62,0.22);
+    }
+    .cal-day.empty { opacity: 0; pointer-events: none; }
+    .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .cal-nav-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; color: var(--dark); }
 
-    .form-card:nth-child(1) { animation-delay: 0.05s; }
-    .form-card:nth-child(2) { animation-delay: 0.10s; }
+    /* CHART */
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* INCOME BARS */
+    .income-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f7; font-size: 13.5px; }
+    .income-row:last-child { border-bottom: none; }
+    .income-bulan  { color: var(--dark); font-weight: 500; }
+    .income-total  { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; color: var(--dark); }
+    .income-bar-wrap { flex: 1; margin: 0 14px; }
+    .income-bar-bg   { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    /* bar → tosca→sky */
+    .income-bar-fill { height: 100%; background: linear-gradient(90deg, #2EC4B6, #4BA3C3); border-radius: 99px; }
+
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 6px; }
 </style>
 
-<!-- ── HERO PROFIL ── -->
-<div class="profile-hero">
-    <div class="avatar-hero">
-        <?= strtoupper(substr($user['nama_lengkap'], 0, 1)) ?>
+<?php
+function rp($n) { return 'Rp ' . number_format($n, 0, ',', '.'); }
+$bulanNames      = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+$now             = new DateTime();
+$todayDay        = (int)$now->format('j');
+$monthName       = $bulanNames[(int)$now->format('n') - 1];
+$year            = $now->format('Y');
+$firstDayOfMonth = new DateTime("$year-{$now->format('m')}-01");
+$startOffset     = (int)$firstDayOfMonth->format('N');
+$daysInMonth     = (int)$now->format('t');
+?>
+
+<!-- STAT CARDS -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(46,196,182,0.12);">💰</div>
+            <div>
+                <div class="stat-label">Pemasukan Hari Ini</div>
+                <div class="stat-value"><?= rp($pemasukanHariIni) ?></div>
+                <div class="stat-sub">dari <?= $totalTransaksiHariIni ?> transaksi</div>
+            </div>
+        </div>
     </div>
-    <div class="profile-hero-info">
-        <div class="profile-hero-name"><?= esc($user['nama_lengkap']) ?></div>
-        <div class="profile-hero-meta">
-            <span class="role-badge"><?= ucfirst($user['role']) ?></span>
-            <?php if ($user['email']): ?>
-            <span class="profile-hero-email">
-                <i class="bi bi-envelope"></i> <?= esc($user['email']) ?>
-            </span>
-            <?php endif; ?>
-            <span class="profile-hero-joined">
-                <i class="bi bi-calendar3"></i>
-                Bergabung <?= date('d F Y', strtotime($user['created_at'])) ?>
-            </span>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(75,163,195,0.12);">🧾</div>
+            <div>
+                <div class="stat-label">Transaksi Hari Ini</div>
+                <div class="stat-value"><?= $totalTransaksiHariIni ?></div>
+                <div class="stat-sub">order selesai</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(155,137,196,0.12);">🍽️</div>
+            <div>
+                <div class="stat-label">Menu Aktif</div>
+                <div class="stat-value"><?= $menuAktif ?></div>
+                <div class="stat-sub">item tersedia</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(255,209,102,0.15);">🪑</div>
+            <div>
+                <div class="stat-label">Meja Tersedia</div>
+                <div class="stat-value"><?= $mejaTersedia ?></div>
+                <div class="stat-sub">siap digunakan</div>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- ── FLASH MESSAGES GLOBAL ── -->
-<?php if (session()->getFlashdata('success')): ?>
-    <div class="alert-custom alert-success-c mb-4">
-        <i class="bi bi-check-circle-fill mt-1"></i>
-        <div><?= session()->getFlashdata('success') ?></div>
-    </div>
-<?php endif; ?>
-
-<div class="row g-4">
-
-    <!-- ── KOLOM KIRI: Info akun + Edit Profil ── -->
-    <div class="col-lg-5">
-
-        <!-- Info Akun (readonly) -->
-        <div class="form-card mb-4">
-            <div class="form-card-header">
-                <div class="form-card-icon" style="background:#EFF6FF;">
-                    <i class="bi bi-person-badge" style="color:#3B82F6;"></i>
-                </div>
-                <div class="form-card-title">Informasi Akun</div>
-            </div>
-            <div class="form-card-body">
-                <div class="info-row">
-                    <div class="info-row-label">Username</div>
-                    <div class="info-row-value">
-                        <code style="background:#F5F6FA; padding:3px 8px; border-radius:6px; font-size:13px;">
-                            <?= esc($user['username']) ?>
-                        </code>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-row-label">Role</div>
-                    <div class="info-row-value">
-                        <span class="badge-status" style="background:<?= $user['role']==='admin' ? '#FFF0EA' : '#EFF6FF' ?>; color:<?= $user['role']==='admin' ? 'var(--primary)' : '#3B82F6' ?>; padding:4px 10px; border-radius:7px; font-size:12px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">
-                            <?= ucfirst($user['role']) ?>
-                        </span>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-row-label">Status</div>
-                    <div class="info-row-value">
-                        <span class="status-dot" style="background:<?= $user['is_active'] ? '#10B981' : '#EF4444' ?>;"></span>
-                        <?= $user['is_active'] ? 'Aktif' : 'Nonaktif' ?>
-                    </div>
-                </div>
-                <div class="info-row">
-                    <div class="info-row-label">Terakhir Update</div>
-                    <div class="info-row-value" style="font-size:13px; color:var(--text-muted);">
-                        <?= $user['updated_at'] ? date('d M Y, H:i', strtotime($user['updated_at'])) : '-' ?>
-                    </div>
+<!-- ROW 2: Grafik + Kalender -->
+<div class="row g-3 mb-4">
+    <!-- Grafik -->
+    <div class="col-12 col-xl-8">
+        <div class="section-card h-100">
+            <div class="section-head">
+                <div class="section-title"><span>📈</span> Tren Pemasukan 30 Hari Terakhir</div>
+                <div style="font-size:12px; color:var(--text-muted); display:flex; align-items:center;">
+                    <span class="legend-dot" style="background:#39007E;"></span> Pemasukan
                 </div>
             </div>
-        </div>
-
-        <!-- Edit Profil -->
-        <div class="form-card">
-            <div class="form-card-header">
-                <div class="form-card-icon" style="background:var(--primary-lt);">
-                    <i class="bi bi-pencil-square" style="color:var(--primary);"></i>
+            <div class="section-body">
+                <div class="chart-wrap">
+                    <canvas id="chartPemasukan"></canvas>
                 </div>
-                <div class="form-card-title">Edit Profil</div>
-            </div>
-            <div class="form-card-body">
-
-                <?php if (session()->getFlashdata('error')): ?>
-                    <div class="alert-custom alert-danger-c">
-                        <i class="bi bi-exclamation-circle-fill mt-1"></i>
-                        <div><?= session()->getFlashdata('error') ?></div>
-                    </div>
-                <?php endif; ?>
-
-                <form action="<?= base_url('profile/update') ?>" method="POST">
-                    <?= csrf_field() ?>
-
-                    <label class="field-label">Nama Lengkap <span style="color:var(--primary);">*</span></label>
-                    <div class="field-wrap">
-                        <i class="bi bi-person field-icon"></i>
-                        <input
-                            type="text"
-                            name="nama_lengkap"
-                            class="form-input"
-                            value="<?= esc($user['nama_lengkap']) ?>"
-                            placeholder="Nama lengkap kamu"
-                            required
-                        >
-                    </div>
-
-                    <label class="field-label">Email</label>
-                    <div class="field-wrap">
-                        <i class="bi bi-envelope field-icon"></i>
-                        <input
-                            type="email"
-                            name="email"
-                            class="form-input"
-                            value="<?= esc($user['email'] ?? '') ?>"
-                            placeholder="Email (opsional)"
-                        >
-                    </div>
-
-                    <label class="field-label" style="color:var(--text-muted); font-size:12px;">Username</label>
-                    <div class="field-wrap">
-                        <i class="bi bi-at field-icon"></i>
-                        <input
-                            type="text"
-                            class="form-input readonly-field"
-                            value="<?= esc($user['username']) ?>"
-                            readonly
-                            title="Username tidak bisa diubah"
-                        >
-                    </div>
-
-                    <div class="d-flex justify-content-end">
-                        <button type="submit" class="btn-save">
-                            <i class="bi bi-check-lg"></i> Simpan Perubahan
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- ── KOLOM KANAN: Ganti Password ── -->
-    <div class="col-lg-7">
-        <div class="form-card h-100">
-            <div class="form-card-header">
-                <div class="form-card-icon" style="background:#F0FFF4;">
-                    <i class="bi bi-shield-lock" style="color:#10B981;"></i>
-                </div>
-                <div class="form-card-title">Ganti Password</div>
-            </div>
-            <div class="form-card-body">
-
-                <?php if (session()->getFlashdata('error_pass')): ?>
-                    <div class="alert-custom alert-danger-c">
-                        <i class="bi bi-exclamation-circle-fill mt-1"></i>
-                        <div><?= session()->getFlashdata('error_pass') ?></div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Info box -->
-                <div style="background:var(--primary-lt); border:1px solid rgba(232,98,42,0.2); border-radius:11px; padding:14px 16px; margin-bottom:22px; display:flex; gap:10px; align-items:flex-start;">
-                    <i class="bi bi-info-circle-fill" style="color:var(--primary); font-size:16px; margin-top:1px; flex-shrink:0;"></i>
-                    <div style="font-size:13px; color:#8B4513; line-height:1.6;">
-                        <?php if ($user['role'] === 'kasir'): ?>
-                            Kamu bisa ganti password yang diberikan admin kapan saja. Pastikan password baru mudah kamu ingat tapi sulit ditebak orang lain.
-                        <?php else: ?>
-                            Ganti password secara berkala untuk menjaga keamanan akun kamu.
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <form action="<?= base_url('profile/change-password') ?>" method="POST" id="formPassword">
-                    <?= csrf_field() ?>
-
-                    <!-- Password lama -->
-                    <label class="field-label">Password Saat Ini <span style="color:var(--primary);">*</span></label>
-                    <div class="field-wrap">
-                        <i class="bi bi-lock field-icon"></i>
-                        <input type="password" name="password_lama" id="passLama" class="form-input" placeholder="Masukkan password saat ini" required>
-                        <button type="button" class="toggle-eye" onclick="toggleEye('passLama','eyeLama')">
-                            <i class="bi bi-eye" id="eyeLama"></i>
-                        </button>
-                    </div>
-
-                    <!-- Password baru -->
-                    <label class="field-label">Password Baru <span style="color:var(--primary);">*</span></label>
-                    <div class="field-wrap" style="margin-bottom:6px;">
-                        <i class="bi bi-lock-fill field-icon"></i>
-                        <input type="password" name="password_baru" id="passBaru" class="form-input"
-                            placeholder="Minimal 6 karakter" required
-                            oninput="checkStrength(this.value)">
-                        <button type="button" class="toggle-eye" onclick="toggleEye('passBaru','eyeBaru')">
-                            <i class="bi bi-eye" id="eyeBaru"></i>
-                        </button>
-                    </div>
-
-                    <!-- Strength bar -->
-                    <div class="strength-bar mb-1">
-                        <div class="strength-fill" id="strengthFill"></div>
-                    </div>
-                    <div class="strength-text mb-3" id="strengthText" style="color:var(--text-muted);">Belum diisi</div>
-
-                    <!-- Konfirmasi password -->
-                    <label class="field-label">Konfirmasi Password Baru <span style="color:var(--primary);">*</span></label>
-                    <div class="field-wrap">
-                        <i class="bi bi-lock-fill field-icon"></i>
-                        <input type="password" name="password_konfirmasi" id="passKonfirm" class="form-input"
-                            placeholder="Ulangi password baru" required
-                            oninput="checkMatch()">
-                        <button type="button" class="toggle-eye" onclick="toggleEye('passKonfirm','eyeKonfirm')">
-                            <i class="bi bi-eye" id="eyeKonfirm"></i>
-                        </button>
-                    </div>
-                    <div id="matchMsg" style="font-size:12px; margin-top:-12px; margin-bottom:16px;"></div>
-
-                    <!-- Syarat password -->
-                    <div style="background:#F8F9FA; border-radius:10px; padding:14px 16px; margin-bottom:22px;">
-                        <div style="font-size:12px; font-weight:600; color:var(--dark); margin-bottom:10px;">
-                            <i class="bi bi-shield-check me-1" style="color:var(--primary);"></i> Syarat Password Aman
-                        </div>
-                        <div class="d-flex flex-column gap-2">
-                            <div class="req-item" id="req-length">
-                                <i class="bi bi-circle" style="font-size:11px;"></i>
-                                <span style="font-size:12.5px; margin-left:6px;">Minimal 6 karakter</span>
-                            </div>
-                            <div class="req-item" id="req-upper">
-                                <i class="bi bi-circle" style="font-size:11px;"></i>
-                                <span style="font-size:12.5px; margin-left:6px;">Mengandung huruf besar</span>
-                            </div>
-                            <div class="req-item" id="req-number">
-                                <i class="bi bi-circle" style="font-size:11px;"></i>
-                                <span style="font-size:12.5px; margin-left:6px;">Mengandung angka</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div style="font-size:12px; color:var(--text-muted);">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Setelah ganti password, kamu akan tetap bisa login
-                        </div>
-                        <button type="submit" class="btn-save" id="btnSavePass" style="background:#10B981;">
-                            <i class="bi bi-shield-check"></i> Ganti Password
-                        </button>
-                    </div>
-                </form>
             </div>
         </div>
     </div>
 
+    <!-- Kalender -->
+    <div class="col-12 col-xl-4">
+        <div class="section-card h-100">
+            <div class="section-head">
+                <div class="section-title"><span>📅</span> Kalender Transaksi</div>
+            </div>
+            <div class="section-body">
+                <div class="cal-nav">
+                    <div class="cal-nav-title"><?= $monthName ?> <?= $year ?></div>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                        <div style="width:10px;height:10px;border-radius:3px;background:rgba(46,196,182,0.13);border:1px solid rgba(46,196,182,0.4);"></div>
+                        <span style="font-size:11px;color:var(--text-muted);">Ada transaksi</span>
+                    </div>
+                </div>
+
+                <div class="calendar-grid">
+                    <?php foreach(['Sen','Sel','Rab','Kam','Jum','Sab','Min'] as $d): ?>
+                        <div class="cal-day-name"><?= $d ?></div>
+                    <?php endforeach; ?>
+
+                    <?php for ($i = 1; $i < $startOffset; $i++): ?>
+                        <div class="cal-day empty"></div>
+                    <?php endfor; ?>
+
+                    <?php for ($d = 1; $d <= $daysInMonth; $d++):
+                        $isToday = ($d === $todayDay);
+                        $hasTrx  = in_array($d, $hariAktif);
+                        $cls     = 'cal-day';
+                        if ($isToday)    $cls .= ' today';
+                        elseif ($hasTrx) $cls .= ' has-trx';
+                    ?>
+                        <div class="<?= $cls ?>" title="<?= $hasTrx ? 'Ada transaksi' : '' ?>">
+                            <?= $d ?>
+                        </div>
+                    <?php endfor; ?>
+                </div>
+
+                <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border); display:flex; gap:14px; flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
+                        <div style="width:24px;height:24px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;"><?= $todayDay ?></div>
+                        Hari ini
+                    </div>
+                    <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
+                        <div style="width:24px;height:24px;border-radius:7px;background:rgba(46,196,182,0.13);border:1px solid rgba(46,196,182,0.3);display:flex;align-items:center;justify-content:center;color:#0e9088;font-size:14px;font-weight:800;">•</div>
+                        Ada transaksi
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<style>
-    .req-item { display: flex; align-items: center; color: var(--text-muted); transition: color 0.2s; }
-    .req-item.valid { color: #10B981; }
-    .req-item.valid i::before { content: "\f270"; } /* bi-check-circle-fill */
-</style>
+<!-- ROW 3: Income + Transaksi Terakhir -->
+<div class="row g-3">
+    <!-- Income per Bulan -->
+    <div class="col-12 col-xl-4">
+        <div class="section-card h-100">
+            <div class="section-head">
+                <div class="section-title"><span>💹</span> Income per Bulan <?= $year ?></div>
+            </div>
+            <div class="section-body">
+                <?php
+                $incLbl = json_decode($incomeLabel, true);
+                $incDat = json_decode($incomeData,  true);
+                $maxInc = !empty($incDat) ? max($incDat) : 1;
+                if ($maxInc == 0) $maxInc = 1;
+                if (empty($incDat)): ?>
+                    <div style="text-align:center; padding:30px 0; color:var(--text-muted);">
+                        <div style="font-size:32px; margin-bottom:8px;">📭</div>
+                        <div style="font-size:13px;">Belum ada data income tahun ini.</div>
+                    </div>
+                <?php else:
+                    foreach ($incLbl as $i => $bulan):
+                        $pct = ($incDat[$i] / $maxInc) * 100; ?>
+                    <div class="income-row">
+                        <div class="income-bulan" style="width:40px;"><?= $bulan ?></div>
+                        <div class="income-bar-wrap">
+                            <div class="income-bar-bg">
+                                <div class="income-bar-fill" style="width:<?= round($pct) ?>%;"></div>
+                            </div>
+                        </div>
+                        <div class="income-total" style="font-size:12px; white-space:nowrap;"><?= rp($incDat[$i]) ?></div>
+                    </div>
+                <?php endforeach; endif; ?>
+            </div>
+        </div>
+    </div>
 
+    <!-- Transaksi Terakhir -->
+    <div class="col-12 col-xl-8">
+        <div class="section-card h-100">
+            <div class="section-head">
+                <div class="section-title"><span>🕐</span> Transaksi Terakhir</div>
+                <a href="<?= base_url('laporan') ?>" style="font-size:12px; color:#0e9088; text-decoration:none; font-weight:600;">
+                    Lihat semua →
+                </a>
+            </div>
+            <div style="overflow-x:auto;">
+                <?php if (empty($transaksiTerakhir)): ?>
+                    <div style="text-align:center; padding:40px 0; color:var(--text-muted);">
+                        <div style="font-size:36px; margin-bottom:10px;">🧾</div>
+                        <div style="font-size:13px;">Belum ada transaksi hari ini.</div>
+                        <a href="<?= base_url('transaksi') ?>"
+                           style="display:inline-block; margin-top:12px; padding:8px 20px;
+                                  background:linear-gradient(135deg,#2EC4B6,#4BA3C3);
+                                  color:#fff; border-radius:8px; font-size:13px; font-weight:600; text-decoration:none;">
+                            + Buat Transaksi
+                        </a>
+                    </div>
+                <?php else: ?>
+                <table class="trx-table">
+                    <thead>
+                        <tr>
+                            <th>Kode Order</th>
+                            <th>Meja</th>
+                            <th>Customer</th>
+                            <?php if (session()->get('role') === 'admin'): ?><th>Kasir</th><?php endif; ?>
+                            <th>Total</th>
+                            <th>Waktu</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($transaksiTerakhir as $trx): ?>
+                        <tr>
+                            <td><span class="kode-badge"><?= esc($trx['kode_order']) ?></span></td>
+                            <td><span style="font-weight:600;">Meja <?= esc($trx['nomor_meja']) ?></span></td>
+                            <td>
+                                <?php if ($trx['customer']): ?>
+                                    <div style="font-weight:500;"><?= esc($trx['customer']) ?></div>
+                                <?php else: ?>
+                                    <span style="color:var(--text-muted); font-size:12px;">Umum</span>
+                                <?php endif; ?>
+                            </td>
+                            <?php if (session()->get('role') === 'admin'): ?>
+                            <td style="color:var(--text-muted); font-size:13px;"><?= esc($trx['kasir']) ?></td>
+                            <?php endif; ?>
+                            <td>
+                                <span style="font-family:'Plus Jakarta Sans',sans-serif; font-weight:700; color:var(--dark);">
+                                    <?= rp($trx['total_harga']) ?>
+                                </span>
+                            </td>
+                            <td style="color:var(--text-muted); font-size:12.5px; white-space:nowrap;">
+                                <?= date('H:i', strtotime($trx['created_at'])) ?>
+                            </td>
+                            <td>
+                                <?php
+                                $statusMap = [
+                                    'done'      => ['label'=>'Selesai', 'cls'=>'status-done'],
+                                    'pending'   => ['label'=>'Pending', 'cls'=>'status-pending'],
+                                    'process'   => ['label'=>'Proses',  'cls'=>'status-process'],
+                                    'cancelled' => ['label'=>'Batal',   'cls'=>'status-cancelled'],
+                                ];
+                                $s = $statusMap[$trx['status']] ?? ['label'=>ucfirst($trx['status']),'cls'=>'status-pending'];
+                                ?>
+                                <span class="status-badge <?= $s['cls'] ?>"><?= $s['label'] ?></span>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CHART JS -->
 <script>
-function toggleEye(inputId, iconId) {
-    const inp  = document.getElementById(inputId);
-    const icon = document.getElementById(iconId);
-    if (inp.type === 'password') {
-        inp.type = 'text';
-        icon.className = 'bi bi-eye-slash';
-    } else {
-        inp.type = 'password';
-        icon.className = 'bi bi-eye';
-    }
-}
+(function() {
+    const labels = <?= $grafikLabel ?>;
+    const data   = <?= $grafikData ?>;
+    if (!labels.length) return;
 
-function checkStrength(val) {
-    const fill = document.getElementById('strengthFill');
-    const text = document.getElementById('strengthText');
+    const ctx  = document.getElementById('chartPemasukan').getContext('2d');
+    const grad = ctx.createLinearGradient(0, 0, 0, 220);
+    grad.addColorStop(0, 'rgba(57,0,126,0.18)');
+    grad.addColorStop(1, 'rgba(57,0,126,0)');
 
-    const hasLen    = val.length >= 6;
-    const hasUpper  = /[A-Z]/.test(val);
-    const hasNumber = /[0-9]/.test(val);
-    const hasSymbol = /[^a-zA-Z0-9]/.test(val);
-
-    // Update requirement checklist
-    setReq('req-length', hasLen);
-    setReq('req-upper',  hasUpper);
-    setReq('req-number', hasNumber);
-
-    let score = 0;
-    if (hasLen)    score++;
-    if (hasUpper)  score++;
-    if (hasNumber) score++;
-    if (hasSymbol) score++;
-    if (val.length >= 10) score++;
-
-    const levels = [
-        { pct: '0%',   color: '#EEE',    label: 'Belum diisi',     textColor: '#AAA' },
-        { pct: '25%',  color: '#EF4444', label: 'Lemah',           textColor: '#EF4444' },
-        { pct: '50%',  color: '#F59E0B', label: 'Sedang',          textColor: '#F59E0B' },
-        { pct: '75%',  color: '#3B82F6', label: 'Cukup Kuat',      textColor: '#3B82F6' },
-        { pct: '90%',  color: '#10B981', label: 'Kuat',            textColor: '#10B981' },
-        { pct: '100%', color: '#059669', label: '💪 Sangat Kuat',  textColor: '#059669' },
-    ];
-
-    const idx = val.length === 0 ? 0 : Math.min(score, 5);
-    fill.style.width      = levels[idx].pct;
-    fill.style.background = levels[idx].color;
-    text.textContent      = levels[idx].label;
-    text.style.color      = levels[idx].textColor;
-}
-
-function setReq(id, valid) {
-    const el = document.getElementById(id);
-    if (valid) {
-        el.classList.add('valid');
-        el.querySelector('i').className = 'bi bi-check-circle-fill';
-    } else {
-        el.classList.remove('valid');
-        el.querySelector('i').className = 'bi bi-circle';
-    }
-}
-
-function checkMatch() {
-    const baru    = document.getElementById('passBaru').value;
-    const konfirm = document.getElementById('passKonfirm').value;
-    const msg     = document.getElementById('matchMsg');
-
-    if (konfirm.length === 0) {
-        msg.innerHTML = '';
-        return;
-    }
-
-    if (baru === konfirm) {
-        msg.innerHTML = '<span style="color:#10B981;"><i class="bi bi-check-circle-fill me-1"></i>Password cocok</span>';
-    } else {
-        msg.innerHTML = '<span style="color:#EF4444;"><i class="bi bi-x-circle-fill me-1"></i>Password tidak cocok</span>';
-    }
-}
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Pemasukan',
+                data,
+                borderColor:          '#39007E',
+                backgroundColor:      grad,
+                borderWidth:          2.5,
+                pointRadius:          3,
+                pointHoverRadius:     6,
+                pointBackgroundColor: '#39007E',
+                tension: 0.4,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => 'Rp ' + Number(ctx.raw).toLocaleString('id-ID')
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { size:11, family:'DM Sans' }, color:'#8A8FAB', maxTicksLimit:10, maxRotation:0 }
+                },
+                y: {
+                    grid: { color:'#ECEEF5', lineWidth:1 },
+                    border: { dash:[4,4] },
+                    ticks: {
+                        font: { size:11, family:'DM Sans' },
+                        color:'#8A8FAB',
+                        callback: v => {
+                            if (v >= 1000000) return 'Rp ' + (v/1000000).toFixed(1) + 'jt';
+                            if (v >= 1000)    return 'Rp ' + (v/1000).toFixed(0) + 'rb';
+                            return 'Rp ' + v;
+                        }
+                    }
+                }
+            }
+        }
+    });
+})();
 </script>

@@ -161,6 +161,7 @@ class DashboardController extends BaseController
             'totalTransaksiHariIni' => $totalTransaksiHariIni,
             'pemasukanHariIni'      => $pemasukanHariIni,
             'menuAktif'             => $menuAktif,
+            'user'                  => (new \App\Models\UserModel())->find($idUser),
             'mejaTersedia'          => $mejaTersedia,
             'grafikLabel'           => json_encode($grafikLabel),
             'grafikData'            => json_encode($grafikData),

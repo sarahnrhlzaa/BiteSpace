@@ -24,6 +24,12 @@ class Menu extends Migration
                 'constraint' => 100,
                 'null'       => FALSE
             ],
+            'gambar' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,
+                'null'       => true,
+                'after'      => 'deskripsi',
+            ],
             'deskripsi' => [
                 'type' => 'TEXT',
                 'null' => TRUE

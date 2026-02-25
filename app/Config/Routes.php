@@ -30,9 +30,20 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('transaksi/addCart', 'TransaksiController::addCart');
     $routes->post('transaksi/submit',  'TransaksiController::submit');
 
-    // Menu — GET bisa semua, POST/PUT/DELETE hanya admin
-    $routes->get('menu',               'MenuController::index');
-    $routes->get('menu/(:num)',        'MenuController::show/$1');
+    // // Menu — GET bisa semua, POST/PUT/DELETE hanya admin
+    // $routes->get('menu',               'MenuController::index');
+    // $routes->get('menu/(:num)',        'MenuController::show/$1');
+
+    // Menu (admin only)
+    $routes->group('menu', ['filter' => 'auth:admin'], function($routes) {
+    $routes->get('/',            'MenuController::index');
+    $routes->get('create',       'MenuController::create');
+    $routes->post('store',       'MenuController::store');
+    $routes->get('edit/(:num)',  'MenuController::edit/$1');
+    $routes->put('update/(:num)', 'MenuController::update/$1');
+    $routes->post('delete/(:num)', 'MenuController::delete/$1');
+    $routes->post('toggle/(:num)', 'MenuController::toggle/$1');
+});
 
     // Laporan — kasir hanya lihat miliknya, dihandle di controller
     $routes->get('laporan',            'LaporanController::index');
@@ -46,13 +57,13 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     // ── Admin-only routes ──
     $routes->group('', ['filter' => 'admin'], function($routes) {
 
-        // Menu CRUD
-        $routes->get('menu/create',        'MenuController::create');
-        $routes->post('menu/store',        'MenuController::store');
-        $routes->get('menu/edit/(:num)',   'MenuController::edit/$1');
-        $routes->post('menu/update/(:num)','MenuController::update/$1');
-        $routes->post('menu/delete/(:num)','MenuController::delete/$1');
-        $routes->post('menu/toggle/(:num)','MenuController::toggle/$1');
+        // // Menu CRUD
+        // $routes->get('menu/create',        'MenuController::create');
+        // $routes->post('menu/store',        'MenuController::store');
+        // $routes->get('menu/edit/(:num)',   'MenuController::edit/$1');
+        // $routes->post('menu/update/(:num)','MenuController::update/$1');
+        // $routes->post('menu/delete/(:num)','MenuController::delete/$1');
+        // $routes->post('menu/toggle/(:num)','MenuController::toggle/$1');
 
         // Category CRUD
         $routes->get('category',               'CategoryController::index');

@@ -4,37 +4,37 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class CustomerTableSeeder extends Seeder
+class CategorySeeder extends Seeder
 {
     public function run()
     {
         $data = [
             [
-                'nama_customer' => 'Budi Santoso',
-                'telp'          => '081234567890',
+                'nama_category' => 'Makanan Utama',
+                'deskripsi'     => 'Hidangan nasi, mie, dan makanan berat lainnya',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
             ],
             [
-                'nama_customer' => 'Rhydar Sugianto',
-                'telp'          => '085712345678',
+                'nama_category' => 'Makanan Ringan',
+                'deskripsi'     => 'Camilan, gorengan, dan makanan pendamping',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
             ],
             [
-                'nama_customer' => 'Andi Wijaya',
-                'telp'          => '089987654321',
+                'nama_category' => 'Minuman',
+                'deskripsi'     => 'Aneka minuman dingin dan panas',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
             ],
             [
-                'nama_customer' => 'Dewi Lestari',
-                'telp'          => '082155667788',
+                'nama_category' => 'Dessert',
+                'deskripsi'     => 'Makanan penutup dan hidangan manis',
                 'created_at'    => date('Y-m-d H:i:s'),
                 'updated_at'    => date('Y-m-d H:i:s'),
             ],
         ];
 
-        $this->db->table('customer')->insertBatch($data);
+        $this->db->table('category')->insertBatch($data);
     }
 }
