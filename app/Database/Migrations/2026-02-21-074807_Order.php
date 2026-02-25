@@ -63,9 +63,8 @@ class Order extends Migration
         $this->forge->addKey('id_order', TRUE);
         $this->forge->addUniqueKey('kode_order');
         $this->forge->addForeignKey('id_user', 'user', 'id_user', 'CASCADE', 'CASCADE');
-        // FK ke tabel milik jawang — uncomment kalau tabel customer & table udah dibuat
-        // $this->forge->addForeignKey('id_table', 'table', 'id_table', 'CASCADE', 'CASCADE');
-        // $this->forge->addForeignKey('id_customer', 'customer', 'id_customer', 'SET NULL', 'CASCADE');
+        $this->forge->addForeignKey('id_table', 'table', 'id_table', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('id_customer', 'customer', 'id_customer', 'SET NULL', 'CASCADE');
         $this->forge->createTable('order');
     }
 
