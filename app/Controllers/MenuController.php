@@ -22,24 +22,22 @@ class MenuController extends BaseController
     // ── INDEX ──────────────────────────────────────────────
     public function index()
     {
-        $data = [
+        return view('layouts/main', [
             'title'      => 'Daftar Menu',
+            'content'    => 'menu/index',
             'menus'      => $this->menuModel->getMenuWithCategory(),
             'categories' => $this->categoryModel->findAll(),
-        ];
-
-        return view('menu/index', $data);
+        ]);
     }
 
     // ── CREATE (form) ──────────────────────────────────────
     public function create()
     {
-        $data = [
+        return view('layouts/main', [
             'title'      => 'Tambah Menu',
+            'content'    => 'menu/create',
             'categories' => $this->categoryModel->findAll(),
-        ];
-
-        return view('menu/create', $data);
+        ]);
     }
 
     // ── STORE (proses simpan) ──────────────────────────────
@@ -90,13 +88,12 @@ class MenuController extends BaseController
                 ->with('error', 'Menu tidak ditemukan.');
         }
 
-        $data = [
+        return view('layouts/main', [
             'title'      => 'Edit Menu',
+            'content'    => 'menu/edit',
             'menu'       => $menu,
             'categories' => $this->categoryModel->findAll(),
-        ];
-
-        return view('menu/edit', $data);
+        ]);
     }
 
     // ── UPDATE (proses edit) ───────────────────────────────
@@ -116,7 +113,6 @@ class MenuController extends BaseController
             'deskripsi'   => 'permit_empty|max_length[500]',
         ];
 
-        // Validasi gambar hanya kalau ada file baru
         $gambar = $this->request->getFile('gambar');
         if ($gambar && $gambar->isValid()) {
             $rules['gambar'] = 'max_size[gambar,2048]|is_image[gambar]|mime_in[gambar,image/jpg,image/jpeg,image/png,image/webp]';
@@ -128,7 +124,7 @@ class MenuController extends BaseController
                 ->with('error', implode('<br>', $this->validator->getErrors()));
         }
 
-        $namaFile = $menu['gambar']; // default pakai foto lama
+        $namaFile = $menu['gambar'];
 
         // Hapus gambar lama kalau dicentang
         if ($this->request->getPost('hapus_gambar') && $menu['gambar']) {
@@ -139,7 +135,6 @@ class MenuController extends BaseController
 
         // Upload gambar baru kalau ada
         if ($gambar && $gambar->isValid() && ! $gambar->hasMoved()) {
-            // Hapus foto lama dulu
             if ($menu['gambar']) {
                 $pathLama = ROOTPATH . 'public/uploads/menu/' . $menu['gambar'];
                 if (file_exists($pathLama)) unlink($pathLama);
@@ -171,7 +166,6 @@ class MenuController extends BaseController
                 ->with('error', 'Menu tidak ditemukan.');
         }
 
-        // Hapus file gambar
         if ($menu['gambar']) {
             $path = ROOTPATH . 'public/uploads/menu/' . $menu['gambar'];
             if (file_exists($path)) unlink($path);
@@ -186,7 +180,6 @@ class MenuController extends BaseController
     // ── TOGGLE AVAILABLE (AJAX) ────────────────────────────
     public function toggle($id)
     {
-        // Harus AJAX
         if (! $this->request->isAJAX()) {
             return $this->response->setJSON(['success' => false, 'message' => 'Invalid request']);
         }
