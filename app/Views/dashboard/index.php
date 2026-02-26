@@ -20,7 +20,26 @@
         transition: transform 0.2s, box-shadow 0.2s;
         text-decoration: none;
         color: inherit;
+        position: relative;
+        overflow: hidden;
     }
+    .stat-card::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 4px;
+        height: 100%;
+        border-radius: 16px 0 0 16px;
+    }
+    .stat-card.c-tosca::after  { background: linear-gradient(180deg, #2EC4B6, #4BA3C3); }
+    .stat-card.c-sky::after    { background: linear-gradient(180deg, #4BA3C3, #0D1B3E); }
+    .stat-card.c-purple::after { background: linear-gradient(180deg, #9B89C4, #39007E); }
+    .stat-card.c-yellow::after { background: linear-gradient(180deg, #FFD166, #f0b429); }
+    /* Icon bg colors per card */
+    .stat-card.c-tosca  .stat-icon { background: linear-gradient(135deg, rgba(46,196,182,0.18), rgba(75,163,195,0.12)); }
+    .stat-card.c-sky    .stat-icon { background: linear-gradient(135deg, rgba(75,163,195,0.18), rgba(13,27,62,0.06)); }
+    .stat-card.c-purple .stat-icon { background: linear-gradient(135deg, rgba(155,137,196,0.2), rgba(57,0,126,0.08)); }
+    .stat-card.c-yellow .stat-icon { background: linear-gradient(135deg, rgba(255,209,102,0.25), rgba(255,209,102,0.08)); }
     .stat-card:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 24px rgba(13,27,62,0.10);
@@ -49,6 +68,10 @@
         line-height: 1;
         margin-bottom: 4px;
     }
+    .stat-card.c-tosca  .stat-value { color: #1a8a80; }
+    .stat-card.c-sky    .stat-value { color: #1e6e8e; }
+    .stat-card.c-purple .stat-value { color: #5a4690; }
+    .stat-card.c-yellow .stat-value { color: #8a6200; }
     .stat-sub { font-size: 12px; color: var(--text-muted); }
 
     .section-card {
@@ -93,8 +116,8 @@
     .kode-badge {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 12px; font-weight: 700;
-        color: #0e9088;
-        background: rgba(46,196,182,0.10);
+        color: #1e5f7a;
+        background: rgba(75,163,195,0.12);
         padding: 3px 10px; border-radius: 6px; white-space: nowrap;
     }
 
@@ -114,16 +137,16 @@
     }
     /* has-trx → tosca tint */
     .cal-day.has-trx {
-        background: rgba(46,196,182,0.13);
-        color: #0e9088;
+        background: rgba(75,163,195,0.15);
+        color: #1e7a9a;
         font-weight: 700;
     }
     /* today → navy */
     .cal-day.today {
-        background: var(--navy);
+        background: linear-gradient(135deg, var(--sky), var(--purple));
         color: #fff;
         font-weight: 800;
-        box-shadow: 0 4px 10px rgba(13,27,62,0.22);
+        box-shadow: 0 4px 12px rgba(75,163,195,0.4);
     }
     .cal-day.empty { opacity: 0; pointer-events: none; }
     .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
@@ -140,7 +163,7 @@
     .income-bar-wrap { flex: 1; margin: 0 14px; }
     .income-bar-bg   { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
     /* bar → tosca→sky */
-    .income-bar-fill { height: 100%; background: linear-gradient(90deg, #2EC4B6, #4BA3C3); border-radius: 99px; }
+    .income-bar-fill { height: 100%; background: linear-gradient(90deg, #9B89C4, #FFD166); border-radius: 99px; }
 
     .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 6px; }
 </style>
@@ -160,8 +183,8 @@ $daysInMonth     = (int)$now->format('t');
 <!-- STAT CARDS -->
 <div class="row g-3 mb-4">
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(46,196,182,0.12);">💰</div>
+        <div class="stat-card c-tosca">
+            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(46,196,182,0.15),rgba(75,163,195,0.15));"><i class="bi bi-cash-coin" style="color:#2EC4B6; font-size:24px;"></i></div>
             <div>
                 <div class="stat-label">Pemasukan Hari Ini</div>
                 <div class="stat-value"><?= rp($pemasukanHariIni) ?></div>
@@ -170,8 +193,8 @@ $daysInMonth     = (int)$now->format('t');
         </div>
     </div>
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(75,163,195,0.12);">🧾</div>
+        <div class="stat-card c-sky">
+            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(75,163,195,0.15),rgba(13,27,62,0.08));"><i class="bi bi-receipt" style="color:#4BA3C3; font-size:24px;"></i></div>
             <div>
                 <div class="stat-label">Transaksi Hari Ini</div>
                 <div class="stat-value"><?= $totalTransaksiHariIni ?></div>
@@ -180,8 +203,8 @@ $daysInMonth     = (int)$now->format('t');
         </div>
     </div>
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(155,137,196,0.12);">🍽️</div>
+        <div class="stat-card c-purple">
+            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(155,137,196,0.18),rgba(57,0,126,0.08));"><i class="bi bi-journal-bookmark-fill" style="color:#9B89C4; font-size:24px;"></i></div>
             <div>
                 <div class="stat-label">Menu Aktif</div>
                 <div class="stat-value"><?= $menuAktif ?></div>
@@ -190,8 +213,8 @@ $daysInMonth     = (int)$now->format('t');
         </div>
     </div>
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="stat-card">
-            <div class="stat-icon" style="background:rgba(255,209,102,0.15);">🪑</div>
+        <div class="stat-card c-yellow">
+            <div class="stat-icon" style="background:linear-gradient(135deg,rgba(255,209,102,0.2),rgba(255,209,102,0.05));"><i class="bi bi-grid-3x3-gap" style="color:#c49800; font-size:24px;"></i></div>
             <div>
                 <div class="stat-label">Meja Tersedia</div>
                 <div class="stat-value"><?= $mejaTersedia ?></div>
@@ -207,7 +230,7 @@ $daysInMonth     = (int)$now->format('t');
     <div class="col-12 col-xl-8">
         <div class="section-card h-100">
             <div class="section-head">
-                <div class="section-title"><span>📈</span> Tren Pemasukan 30 Hari Terakhir</div>
+                <div class="section-title"><i class="bi bi-graph-up-arrow me-2" style="color:var(--sky);"></i> Tren Pemasukan 30 Hari Terakhir</div>
                 <div style="font-size:12px; color:var(--text-muted); display:flex; align-items:center;">
                     <span class="legend-dot" style="background:#39007E;"></span> Pemasukan
                 </div>
@@ -224,46 +247,35 @@ $daysInMonth     = (int)$now->format('t');
     <div class="col-12 col-xl-4">
         <div class="section-card h-100">
             <div class="section-head">
-                <div class="section-title"><span>📅</span> Kalender Transaksi</div>
+                <div class="section-title"><i class="bi bi-calendar-week me-2" style="color:var(--purple);"></i> Kalender Transaksi</div>
             </div>
             <div class="section-body">
+                <!-- Dynamic calendar nav -->
                 <div class="cal-nav">
-                    <div class="cal-nav-title"><?= $monthName ?> <?= $year ?></div>
-                    <div style="display:flex; gap:6px; align-items:center;">
-                        <div style="width:10px;height:10px;border-radius:3px;background:rgba(46,196,182,0.13);border:1px solid rgba(46,196,182,0.4);"></div>
+                    <div style="display:flex;align-items:center;gap:6px;">
+                        <button onclick="calPrev()" style="width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.2s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='#fff'">
+                            <i class="bi bi-chevron-left" style="font-size:12px;"></i>
+                        </button>
+                        <div class="cal-nav-title" id="calTitle"></div>
+                        <button onclick="calNext()" style="width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all 0.2s;" onmouseover="this.style.background='var(--bg)'" onmouseout="this.style.background='#fff'">
+                            <i class="bi bi-chevron-right" style="font-size:12px;"></i>
+                        </button>
+                    </div>
+                    <div style="display:flex;gap:6px;align-items:center;">
+                        <div style="width:10px;height:10px;border-radius:3px;background:rgba(75,163,195,0.2);border:1px solid rgba(75,163,195,0.4);"></div>
                         <span style="font-size:11px;color:var(--text-muted);">Ada transaksi</span>
                     </div>
                 </div>
 
-                <div class="calendar-grid">
-                    <?php foreach(['Sen','Sel','Rab','Kam','Jum','Sab','Min'] as $d): ?>
-                        <div class="cal-day-name"><?= $d ?></div>
-                    <?php endforeach; ?>
-
-                    <?php for ($i = 1; $i < $startOffset; $i++): ?>
-                        <div class="cal-day empty"></div>
-                    <?php endfor; ?>
-
-                    <?php for ($d = 1; $d <= $daysInMonth; $d++):
-                        $isToday = ($d === $todayDay);
-                        $hasTrx  = in_array($d, $hariAktif);
-                        $cls     = 'cal-day';
-                        if ($isToday)    $cls .= ' today';
-                        elseif ($hasTrx) $cls .= ' has-trx';
-                    ?>
-                        <div class="<?= $cls ?>" title="<?= $hasTrx ? 'Ada transaksi' : '' ?>">
-                            <?= $d ?>
-                        </div>
-                    <?php endfor; ?>
-                </div>
+                <div class="calendar-grid" id="calGrid"></div>
 
                 <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border); display:flex; gap:14px; flex-wrap:wrap;">
                     <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
-                        <div style="width:24px;height:24px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;"><?= $todayDay ?></div>
+                        <div style="width:24px;height:24px;border-radius:7px;background:var(--navy);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800;" id="todayLegend"></div>
                         Hari ini
                     </div>
                     <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);">
-                        <div style="width:24px;height:24px;border-radius:7px;background:rgba(46,196,182,0.13);border:1px solid rgba(46,196,182,0.3);display:flex;align-items:center;justify-content:center;color:#0e9088;font-size:14px;font-weight:800;">•</div>
+                        <div style="width:24px;height:24px;border-radius:7px;background:rgba(75,163,195,0.13);border:1px solid rgba(75,163,195,0.3);display:flex;align-items:center;justify-content:center;color:#1e7a9a;font-size:14px;font-weight:800;">•</div>
                         Ada transaksi
                     </div>
                 </div>
@@ -278,7 +290,7 @@ $daysInMonth     = (int)$now->format('t');
     <div class="col-12 col-xl-4">
         <div class="section-card h-100">
             <div class="section-head">
-                <div class="section-title"><span>💹</span> Income per Bulan <?= $year ?></div>
+                <div class="section-title"><i class="bi bi-currency-dollar me-2" style="color:var(--yellow); filter:brightness(0.8);"></i> Income per Bulan <?= $year ?></div>
             </div>
             <div class="section-body">
                 <?php
@@ -312,7 +324,7 @@ $daysInMonth     = (int)$now->format('t');
     <div class="col-12 col-xl-8">
         <div class="section-card h-100">
             <div class="section-head">
-                <div class="section-title"><span>🕐</span> Transaksi Terakhir</div>
+                <div class="section-title"><i class="bi bi-clock-history me-2" style="color:var(--tosca);"></i> Transaksi Terakhir</div>
                 <a href="<?= base_url('laporan') ?>" style="font-size:12px; color:#0e9088; text-decoration:none; font-weight:600;">
                     Lihat semua →
                 </a>
@@ -396,8 +408,8 @@ $daysInMonth     = (int)$now->format('t');
 
     const ctx  = document.getElementById('chartPemasukan').getContext('2d');
     const grad = ctx.createLinearGradient(0, 0, 0, 220);
-    grad.addColorStop(0, 'rgba(57,0,126,0.18)');
-    grad.addColorStop(1, 'rgba(57,0,126,0)');
+    grad.addColorStop(0, 'rgba(75,163,195,0.3)');
+    grad.addColorStop(1, 'rgba(75,163,195,0)');
 
     new Chart(ctx, {
         type: 'line',
@@ -406,12 +418,12 @@ $daysInMonth     = (int)$now->format('t');
             datasets: [{
                 label: 'Pemasukan',
                 data,
-                borderColor:          '#39007E',
+                borderColor:          '#4BA3C3',
                 backgroundColor:      grad,
                 borderWidth:          2.5,
                 pointRadius:          3,
                 pointHoverRadius:     6,
-                pointBackgroundColor: '#39007E',
+                pointBackgroundColor: '#4BA3C3',
                 tension: 0.4,
                 fill: true,
             }]
@@ -449,4 +461,55 @@ $daysInMonth     = (int)$now->format('t');
         }
     });
 })();
+
+// ── Dynamic Calendar ──────────────────────────────────
+const hariAktif   = <?= json_encode($hariAktif) ?>;
+const todayReal   = new Date();
+let   calYear     = todayReal.getFullYear();
+let   calMonth    = todayReal.getMonth(); // 0-based
+
+const bulanNamesJS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const dayNames     = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
+
+function renderCalendar() {
+    const title = document.getElementById('calTitle');
+    const grid  = document.getElementById('calGrid');
+    const leg   = document.getElementById('todayLegend');
+    if (!grid) return;
+
+    title.textContent = bulanNamesJS[calMonth] + ' ' + calYear;
+
+    const firstDay   = new Date(calYear, calMonth, 1);
+    const daysInMon  = new Date(calYear, calMonth + 1, 0).getDate();
+    // Monday-based offset (getDay: 0=Sun,1=Mon,...6=Sat → Mon=1 → offset=0)
+    let offset = firstDay.getDay() - 1;
+    if (offset < 0) offset = 6;
+
+    let html = '';
+    dayNames.forEach(d => { html += `<div class="cal-day-name">${d}</div>`; });
+    for (let i = 0; i < offset; i++) { html += '<div class="cal-day empty"></div>'; }
+
+    const isCurrentMonth = (calYear === todayReal.getFullYear() && calMonth === todayReal.getMonth());
+
+    for (let d = 1; d <= daysInMon; d++) {
+        let cls = 'cal-day';
+        let extra = '';
+        if (isCurrentMonth && d === todayReal.getDate()) {
+            cls += ' today';
+        } else if (isCurrentMonth && hariAktif.includes(d)) {
+            cls += ' has-trx';
+            extra = 'title="Ada transaksi"';
+        }
+        html += `<div class="${cls}" ${extra}>${d}</div>`;
+    }
+
+    grid.innerHTML = html;
+    if (leg) leg.textContent = todayReal.getDate();
+}
+
+function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); }
+
+renderCalendar();
+
 </script>

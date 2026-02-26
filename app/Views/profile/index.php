@@ -23,7 +23,7 @@
         content: '';
         position: absolute;
         width: 320px; height: 320px;
-        background: radial-gradient(circle, rgba(46,196,182,0.25) 0%, transparent 65%);
+        background: radial-gradient(circle, rgba(155,137,196,0.28) 0%, transparent 65%);
         top: -90px; right: -60px;
         pointer-events: none;
     }
@@ -39,7 +39,7 @@
     .avatar-hero {
         width: 90px; height: 90px;
         border-radius: 22px;
-        background: linear-gradient(135deg, var(--tosca), var(--sky));
+        background: linear-gradient(135deg, var(--sky), var(--purple));
         display: flex; align-items: center; justify-content: center;
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-weight: 800;
@@ -48,7 +48,7 @@
         flex-shrink: 0;
         position: relative;
         z-index: 2;
-        box-shadow: 0 8px 24px rgba(46,196,182,0.4);
+        box-shadow: 0 8px 24px rgba(75,163,195,0.4);
     }
 
     .profile-hero-left { display: flex; align-items: center; gap: 28px; position: relative; z-index: 2; }
@@ -64,9 +64,9 @@
     .profile-hero-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
     .role-badge {
-        background: rgba(46,196,182,0.2);
-        border: 1px solid rgba(46,196,182,0.4);
-        color: #7EEEE8;
+        background: rgba(75,163,195,0.2);
+        border: 1px solid rgba(75,163,195,0.4);
+        color: #a8d8ea;
         font-size: 12px;
         font-weight: 700;
         padding: 4px 12px;
@@ -87,9 +87,9 @@
 
     .btn-edit-profile {
         position: relative; z-index: 2;
-        background: rgba(46,196,182,0.15);
-        border: 1px solid rgba(46,196,182,0.35);
-        color: #7EEEE8;
+        background: rgba(255,209,102,0.15);
+        border: 1px solid rgba(255,209,102,0.35);
+        color: var(--yellow);
         padding: 10px 20px;
         border-radius: 11px;
         font-family: 'Plus Jakarta Sans', sans-serif;
@@ -101,8 +101,8 @@
         backdrop-filter: blur(8px);
     }
     .btn-edit-profile:hover {
-        background: var(--tosca);
-        border-color: var(--tosca);
+        background: var(--yellow);
+        border-color: var(--yellow);
         color: var(--navy);
         transform: translateY(-1px);
     }
@@ -169,7 +169,7 @@
     }
 
     /* role badge inside card */
-    .role-pill-admin { background: rgba(46,196,182,0.12); color: #0e9088; padding: 4px 10px; border-radius: 7px; font-size:12px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; }
+    .role-pill-admin { background: rgba(75,163,195,0.15); color: #1e6e8e; padding: 4px 10px; border-radius: 7px; font-size:12px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; }
     .role-pill-kasir { background: rgba(255,209,102,0.18); color: #a07800; padding: 4px 10px; border-radius: 7px; font-size:12px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif; }
 
     /* ganti password button */
@@ -177,9 +177,9 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        background: rgba(46,196,182,0.1);
-        border: 1px solid rgba(46,196,182,0.3);
-        color: #0e9088;
+        background: rgba(155,137,196,0.12);
+        border: 1px solid rgba(155,137,196,0.3);
+        color: #5d4a8a;
         padding: 10px 18px;
         border-radius: 10px;
         font-size: 13px;
@@ -189,8 +189,8 @@
         transition: all 0.2s;
     }
     .btn-ganti-pass:hover {
-        background: var(--tosca);
-        border-color: var(--tosca);
+        background: var(--purple);
+        border-color: var(--purple);
         color: #fff;
     }
 
@@ -298,8 +298,8 @@
     <div class="col-lg-6">
         <div class="info-card">
             <div class="info-card-header">
-                <div class="info-card-icon" style="background:rgba(46,196,182,0.12);">
-                    <i class="bi bi-shield-lock" style="color:var(--tosca);"></i>
+                <div class="info-card-icon" style="background:rgba(155,137,196,0.14);">
+                    <i class="bi bi-shield-lock" style="color:var(--purple);"></i>
                 </div>
                 <div class="info-card-title">Keamanan</div>
             </div>

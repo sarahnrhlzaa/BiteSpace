@@ -25,8 +25,12 @@ class AdminFilter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+        if (! session()->get('isLoggedIn')) {
+            return redirect()->to(base_url('login'))->with('error', 'Silakan login terlebih dahulu.');
+        }
+
         if (session()->get('role') !== 'admin') {
-            return redirect()->to('/dashboard')->with('error', 'Akses ditolak. Halaman ini khusus Admin.');
+            return redirect()->to(base_url('dashboard'))->with('error', 'Akses ditolak. Halaman ini khusus admin.');
         }
     }
 

@@ -55,7 +55,7 @@
         .orb-yellow {
             position: absolute;
             width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(255,209,102,0.1) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255,209,102,0.18) 0%, transparent 60%);
             bottom: 10%; left: 30%;
         }
 
@@ -74,10 +74,10 @@
         .brand-logo {
             width: 46px; height: 46px;
             border-radius: 14px;
-            background: linear-gradient(135deg, var(--tosca), var(--sky));
+            background: linear-gradient(135deg, var(--sky), var(--purple));
             display: flex; align-items: center; justify-content: center;
             font-size: 22px;
-            box-shadow: 0 8px 20px rgba(46,196,182,0.3);
+            box-shadow: 0 8px 20px rgba(75,163,195,0.4);
         }
         .brand-name { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 22px; color: #fff; }
         .brand-name span { color: var(--yellow); }
@@ -176,8 +176,8 @@
         .form-field::placeholder { color: rgba(255,255,255,0.2); }
         .form-field:focus {
             background: rgba(255,255,255,0.09);
-            border-color: var(--tosca);
-            box-shadow: 0 0 0 4px rgba(46,196,182,0.1);
+            border-color: var(--sky);
+            box-shadow: 0 0 0 4px rgba(75,163,195,0.12);
         }
 
         .toggle-pass {
@@ -185,26 +185,26 @@
             background: none; border: none; color: rgba(255,255,255,0.25);
             font-size: 17px; cursor: pointer; padding: 4px; transition: color 0.2s; z-index: 2;
         }
-        .toggle-pass:hover { color: var(--tosca); }
+        .toggle-pass:hover { color: var(--purple); }
 
         /* Alert */
         .alert-login { border-radius: 12px; font-size: 13px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
         .alert-err { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); color: #FCA5A5; }
-        .alert-ok  { background: rgba(46,196,182,0.1); border: 1px solid rgba(46,196,182,0.2); color: var(--tosca); }
+        .alert-ok  { background: rgba(75,163,195,0.1); border: 1px solid rgba(75,163,195,0.2); color: var(--sky); }
 
         /* Button */
         .btn-submit {
             width: 100%; height: 54px;
-            background: linear-gradient(135deg, var(--tosca) 0%, var(--sky) 100%);
-            color: var(--navy);
+            background: linear-gradient(135deg, var(--sky) 0%, var(--purple) 100%);
+            color: #fff;
             border: none; border-radius: 14px;
             font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 15px;
             cursor: pointer; transition: all 0.25s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
             margin-top: 8px;
-            box-shadow: 0 8px 24px rgba(46,196,182,0.25);
+            box-shadow: 0 8px 24px rgba(75,163,195,0.3);
         }
-        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(46,196,182,0.35); filter: brightness(1.05); }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(75,163,195,0.4); filter: brightness(1.05); }
         .btn-submit:active { transform: translateY(0); }
 
         .footer-note { text-align: center; margin-top: 24px; font-size: 12px; color: rgba(255,255,255,0.18); }
@@ -227,7 +227,7 @@
 <div class="left-panel">
     <div class="brand">
         <div class="brand-logo">🍽️</div>
-        <div class="brand-name">Bite<span>Space</span></div>
+        <div class="brand-name" style="background:linear-gradient(90deg,var(--sky),var(--purple),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">BiteSpace</div>
     </div>
 
     <div class="hero-copy">
@@ -240,19 +240,19 @@
         <p class="hero-desc">Sistem kasir modern untuk restoran dine-in. Kelola pesanan, pantau pemasukan, dan lacak performa shift — semua dalam satu platform.</p>
         <div class="feature-grid">
             <div class="feature-item">
-                <div class="feature-dot" style="background:rgba(46,196,182,0.12);">🧾</div>
+                <div class="feature-dot" style="background:linear-gradient(135deg,rgba(75,163,195,0.2),rgba(46,196,182,0.1));">🧾</div>
                 <div class="feature-text">Transaksi Cepat</div>
             </div>
             <div class="feature-item">
-                <div class="feature-dot" style="background:rgba(75,163,195,0.12);">📊</div>
+                <div class="feature-dot" style="background:linear-gradient(135deg,rgba(155,137,196,0.2),rgba(75,163,195,0.1));">📊</div>
                 <div class="feature-text">Laporan Real-time</div>
             </div>
             <div class="feature-item">
-                <div class="feature-dot" style="background:rgba(155,137,196,0.12);">👥</div>
+                <div class="feature-dot" style="background:linear-gradient(135deg,rgba(57,0,126,0.2),rgba(155,137,196,0.1));">👥</div>
                 <div class="feature-text">Multi Kasir</div>
             </div>
             <div class="feature-item">
-                <div class="feature-dot" style="background:rgba(255,209,102,0.12);">🪑</div>
+                <div class="feature-dot" style="background:linear-gradient(135deg,rgba(255,209,102,0.25),rgba(46,196,182,0.1));">🪑</div>
                 <div class="feature-text">Manajemen Meja</div>
             </div>
         </div>

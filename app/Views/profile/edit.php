@@ -73,8 +73,8 @@
     }
 
     .form-input:focus {
-        border-color: var(--tosca);
-        box-shadow: 0 0 0 3px rgba(46,196,182,0.12);
+        border-color: var(--sky);
+        box-shadow: 0 0 0 3px rgba(75,163,195,0.12);
         background: #fff;
         outline: none;
     }
@@ -97,13 +97,13 @@
         padding: 4px;
         transition: color 0.2s;
     }
-    .toggle-eye:hover { color: var(--tosca); }
+    .toggle-eye:hover { color: var(--sky); }
 
     /* ── Save button ── */
     .btn-save {
         height: 46px;
         padding: 0 28px;
-        background: linear-gradient(135deg, var(--tosca), var(--sky));
+        background: linear-gradient(135deg, var(--sky), var(--purple));
         color: #fff;
         border: none;
         border-radius: 11px;
@@ -115,12 +115,12 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        box-shadow: 0 4px 14px rgba(46,196,182,0.3);
+        box-shadow: 0 4px 14px rgba(75,163,195,0.3);
     }
     .btn-save:hover {
         filter: brightness(1.06);
         transform: translateY(-1px);
-        box-shadow: 0 8px 20px rgba(46,196,182,0.35);
+        box-shadow: 0 8px 20px rgba(75,163,195,0.35);
     }
     .btn-save:active { transform: translateY(0); }
 
@@ -128,7 +128,7 @@
     .btn-save-green {
         height: 46px;
         padding: 0 28px;
-        background: #10B981;
+        background: linear-gradient(135deg, var(--purple), var(--tosca));
         color: #fff;
         border: none;
         border-radius: 11px;
@@ -140,12 +140,12 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        box-shadow: 0 4px 14px rgba(16,185,129,0.25);
+        box-shadow: 0 4px 14px rgba(155,137,196,0.35);
     }
     .btn-save-green:hover {
-        background: #059669;
+        filter: brightness(1.06);
         transform: translateY(-1px);
-        box-shadow: 0 8px 20px rgba(16,185,129,0.3);
+        box-shadow: 0 8px 20px rgba(155,137,196,0.4);
     }
 
     /* ── Alerts ── */
@@ -192,13 +192,13 @@
         margin-bottom: 6px;
     }
     .req-item i { font-size: 11px; margin-right: 6px; }
-    .req-item.valid { color: #10B981; }
+    .req-item.valid { color: var(--tosca); }
     .req-item.valid i::before { content: "\f270"; }
 
     /* ── Info box ── */
     .info-box {
-        background: rgba(46,196,182,0.07);
-        border: 1px solid rgba(46,196,182,0.22);
+        background: rgba(155,137,196,0.08);
+        border: 1px solid rgba(155,137,196,0.25);
         border-radius: 11px;
         padding: 13px 16px;
         margin-bottom: 22px;
@@ -206,8 +206,8 @@
         gap: 10px;
         align-items: flex-start;
     }
-    .info-box i { color: var(--tosca); font-size: 15px; margin-top: 1px; flex-shrink: 0; }
-    .info-box p { font-size: 13px; color: #0e6860; line-height: 1.6; margin: 0; }
+    .info-box i { color: var(--purple); font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+    .info-box p { font-size: 13px; color: #5d4a8a; line-height: 1.6; margin: 0; }
 
     /* ── Syarat box ── */
     .syarat-box {
@@ -274,7 +274,7 @@
                     <?= csrf_field() ?>
 
                     <label class="field-label">
-                        Nama Lengkap <span style="color:var(--tosca);">*</span>
+                        Nama Lengkap <span style="color:var(--sky);">*</span>
                     </label>
                     <div class="field-wrap">
                         <i class="bi bi-person field-icon"></i>
@@ -318,8 +318,8 @@
     <div class="col-lg-7">
         <div class="form-card" id="ganti-password">
             <div class="form-card-header">
-                <div class="form-card-icon" style="background:#F0FFF4;">
-                    <i class="bi bi-shield-lock" style="color:#10B981;"></i>
+                <div class="form-card-icon" style="background:rgba(155,137,196,0.12);">
+                    <i class="bi bi-shield-lock" style="color:var(--purple);"></i>
                 </div>
                 <div class="form-card-title">Ganti Password</div>
             </div>
@@ -349,7 +349,7 @@
 
                     <!-- Password lama -->
                     <label class="field-label">
-                        Password Saat Ini <span style="color:var(--tosca);">*</span>
+                        Password Saat Ini <span style="color:var(--sky);">*</span>
                     </label>
                     <div class="field-wrap">
                         <i class="bi bi-lock field-icon"></i>
@@ -362,7 +362,7 @@
 
                     <!-- Password baru -->
                     <label class="field-label">
-                        Password Baru <span style="color:var(--tosca);">*</span>
+                        Password Baru <span style="color:var(--sky);">*</span>
                     </label>
                     <div class="field-wrap" style="margin-bottom:6px;">
                         <i class="bi bi-lock-fill field-icon"></i>
@@ -382,7 +382,7 @@
 
                     <!-- Konfirmasi -->
                     <label class="field-label">
-                        Konfirmasi Password Baru <span style="color:var(--tosca);">*</span>
+                        Konfirmasi Password Baru <span style="color:var(--sky);">*</span>
                     </label>
                     <div class="field-wrap">
                         <i class="bi bi-lock-fill field-icon"></i>

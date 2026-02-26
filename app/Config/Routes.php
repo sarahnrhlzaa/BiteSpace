@@ -45,6 +45,15 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->post('toggle/(:num)', 'MenuController::toggle/$1');
 });
 
+// ── TABLE ──
+$routes->group('table', ['filter' => 'auth'], function ($routes) {
+    $routes->get ('/',              'TableController::index');                           // admin + kasir (read only)
+    $routes->get ('edit/(:num)',    'TableController::edit/$1',    ['filter' => 'admin']);
+    $routes->post('store',          'TableController::store',      ['filter' => 'admin']);
+    $routes->post('update/(:num)',  'TableController::update/$1',  ['filter' => 'admin']);
+    $routes->post('delete/(:num)',  'TableController::delete/$1',  ['filter' => 'admin']);
+    $routes->post('status/(:num)',  'TableController::updateStatus/$1');                // AJAX dari POS (auth)
+});
     // Laporan — kasir hanya lihat miliknya, dihandle di controller
     $routes->get('laporan',            'LaporanController::index');
     $routes->get('laporan/income',     'LaporanController::income');
@@ -55,15 +64,15 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
     $routes->get('payment/success/(:num)', 'PaymentController::success/$1');
 
     // ── Admin-only routes ──
-    $routes->group('', ['filter' => 'admin'], function($routes) {
+    $routes->group('', ['filter' => 'auth:admin'], function($routes) {
 
-        // // Menu CRUD
-        // $routes->get('menu/create',        'MenuController::create');
-        // $routes->post('menu/store',        'MenuController::store');
-        // $routes->get('menu/edit/(:num)',   'MenuController::edit/$1');
-        // $routes->post('menu/update/(:num)','MenuController::update/$1');
-        // $routes->post('menu/delete/(:num)','MenuController::delete/$1');
-        // $routes->post('menu/toggle/(:num)','MenuController::toggle/$1');
+        $routes->get('/',            'MenuController::index');
+        $routes->get('create',       'MenuController::create');
+        $routes->post('store',       'MenuController::store');
+        $routes->get('edit/(:num)',  'MenuController::edit/$1');
+        $routes->put('update/(:num)', 'MenuController::update/$1');
+        $routes->post('delete/(:num)', 'MenuController::delete/$1');
+        $routes->post('toggle/(:num)', 'MenuController::toggle/$1');
 
         // Category CRUD
         $routes->get('category',               'CategoryController::index');
@@ -82,4 +91,5 @@ $routes->group('', ['filter' => 'auth'], function($routes) {
         $routes->post('employee/delete/(:num)','EmployeeController::delete/$1');
         $routes->post('employee/toggle/(:num)','EmployeeController::toggle/$1');
     });
+
 });
