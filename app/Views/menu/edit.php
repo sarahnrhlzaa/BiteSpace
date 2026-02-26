@@ -184,15 +184,23 @@
                         <label class="field-label">Kategori <span class="field-required">*</span></label>
                         <div class="field-wrap">
                             <i class="bi bi-tag field-icon"></i>
-                            <select name="id_category" class="form-select" required>
-                                <option value="">-- Pilih Kategori --</option>
-                                <?php foreach ($categories as $cat): ?>
-                                    <option value="<?= $cat['id_category'] ?>"
-                                            <?= (old('id_category', $menu['id_category']) == $cat['id_category']) ? 'selected' : '' ?>>
-                                        <?= esc($cat['nama_category']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
+                                <select name="id_category" class="form-select" required>
+                                    <option value="">-- Pilih Kategori --</option>
+                                    <?php
+                                    $sudah_tampil = [];
+                                    foreach ($categories as $cat): 
+                                        if (!in_array($cat['nama_category'], $sudah_tampil)): 
+                                            $sudah_tampil[] = $cat['nama_category']; 
+                                    ?>
+                                        <option value="<?= $cat['id_category'] ?>"
+                                                <?= (old('id_category', $menu['id_category']) == $cat['id_category']) ? 'selected' : '' ?>>
+                                            <?= esc($cat['nama_category']) ?>
+                                        </option>
+                                    <?php 
+                                        endif; 
+                                            endforeach; 
+                                    ?>
+                                </select>
                         </div>
                     </div>
                     <div class="col-12">
