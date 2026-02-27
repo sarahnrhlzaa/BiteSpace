@@ -287,8 +287,9 @@
         font-family: 'Plus Jakarta Sans', sans-serif;
         text-decoration: none;
     }
-    .btn-meja-edit:hover  { background: rgba(75,163,195,0.1); border-color: var(--sky); color: var(--sky); text-decoration: none; }
-    .btn-meja-del:hover   { background: rgba(239,68,68,0.08); border-color: #EF4444; color: #EF4444; }
+    .btn-meja-edit:hover   { background: rgba(75,163,195,0.1); border-color: var(--sky); color: var(--sky); text-decoration: none; }
+    .btn-meja-del:hover    { background: rgba(239,68,68,0.08); border-color: #EF4444; color: #EF4444; }
+    .btn-meja-status:hover { background: rgba(155,137,196,0.1); border-color: var(--purple); color: var(--purple); }
 
     /* ── Empty state ── */
     .empty-state {
@@ -300,122 +301,7 @@
     .empty-state i { font-size: 48px; opacity: 0.3; display: block; margin-bottom: 12px; }
     .empty-state p { font-size: 14px; }
 
-    /* ── Modal ── */
-    .bs-modal-custom .modal-content {
-        border: none;
-        border-radius: 18px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    }
-    .bs-modal-custom .modal-header {
-        background: linear-gradient(135deg, var(--navy) 0%, #162952 100%);
-        border: none;
-        padding: 20px 24px;
-    }
-    .bs-modal-custom .modal-title {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 700;
-        font-size: 16px;
-        color: #fff;
-        display: flex; align-items: center; gap: 10px;
-    }
-    .bs-modal-custom .btn-close { filter: invert(1) brightness(2); }
-    .bs-modal-custom .modal-body { padding: 24px; }
-    .bs-modal-custom .modal-footer {
-        border-top: 1px solid var(--border);
-        padding: 16px 24px;
-        background: #FAFBFD;
-    }
 
-    /* reuse field styles from profile */
-    .field-label {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 600;
-        font-size: 12.5px;
-        color: var(--dark);
-        margin-bottom: 7px;
-        display: block;
-    }
-    .field-wrap { position: relative; margin-bottom: 18px; }
-    .field-icon {
-        position: absolute;
-        left: 14px; top: 50%;
-        transform: translateY(-50%);
-        color: var(--text-muted);
-        font-size: 15px;
-        pointer-events: none;
-    }
-    .form-input {
-        width: 100%;
-        height: 46px;
-        padding-left: 42px;
-        padding-right: 14px;
-        border: 1.5px solid var(--border);
-        border-radius: 11px;
-        font-size: 13.5px;
-        font-family: 'DM Sans', sans-serif;
-        color: var(--dark);
-        background: #FAFBFD;
-        transition: all 0.2s;
-    }
-    .form-input:focus {
-        border-color: var(--sky);
-        box-shadow: 0 0 0 3px rgba(75,163,195,0.12);
-        background: #fff;
-        outline: none;
-    }
-    .form-select-custom {
-        width: 100%;
-        height: 46px;
-        padding: 0 14px 0 42px;
-        border: 1.5px solid var(--border);
-        border-radius: 11px;
-        font-size: 13.5px;
-        font-family: 'DM Sans', sans-serif;
-        color: var(--dark);
-        background: #FAFBFD;
-        appearance: none;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .form-select-custom:focus {
-        border-color: var(--sky);
-        box-shadow: 0 0 0 3px rgba(75,163,195,0.12);
-        background: #fff;
-        outline: none;
-    }
-
-    .btn-modal-save {
-        height: 44px;
-        padding: 0 24px;
-        background: linear-gradient(135deg, var(--sky), var(--tosca));
-        color: #fff;
-        border: none;
-        border-radius: 10px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 700;
-        font-size: 13.5px;
-        cursor: pointer;
-        display: inline-flex; align-items: center; gap: 7px;
-        transition: all 0.2s;
-        box-shadow: 0 3px 10px rgba(46,196,182,0.3);
-    }
-    .btn-modal-save:hover { filter: brightness(1.06); transform: translateY(-1px); }
-
-    .btn-modal-cancel {
-        height: 44px;
-        padding: 0 20px;
-        background: #fff;
-        color: var(--text-muted);
-        border: 1.5px solid var(--border);
-        border-radius: 10px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-weight: 600;
-        font-size: 13.5px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-    .btn-modal-cancel:hover { background: #F5F6FA; color: var(--dark); }
 
     @keyframes fadeUp {
         from { opacity: 0; transform: translateY(14px); }
@@ -439,15 +325,9 @@ $occupied  = count(array_filter($tables, fn($t) => $t['status'] === 'occupied'))
 $reserved  = count(array_filter($tables, fn($t) => $t['status'] === 'reserved'));
 ?>
 
-<?php if (session()->getFlashdata('success')): ?>
-    <?= session()->getFlashdata('success') ?> 
-</div>
-<?php endif; ?>
 
-<?php if (session()->getFlashdata('error')): ?>
-    <?= session()->getFlashdata('error') ?>
-</div>
-<?php endif; ?>
+
+
 
 <!-- ── STATS ── -->
 <div class="table-stats">
@@ -510,9 +390,9 @@ $reserved  = count(array_filter($tables, fn($t) => $t['status'] === 'reserved'))
         </select>
     </div>
     <?php if (session()->get('role') === 'admin'): ?>
-    <button class="btn-add-table" data-bs-toggle="modal" data-bs-target="#modalTambah">
+    <a href="<?= base_url('table/create') ?>" class="btn-add-table">
         <i class="bi bi-plus-lg"></i> Tambah Meja
-    </button>
+    </a>
     <?php endif; ?>
 </div>
 
@@ -591,8 +471,13 @@ foreach ($tables as $t) {
                 </span>
             </div>
 
-            <?php if (session()->get('role') === 'admin'): ?>
             <div class="meja-actions">
+                <!-- Ubah status: semua role bisa -->
+                <button class="btn-meja-action btn-meja-status"
+                        onclick="ubahStatus(<?= $t['id_table'] ?>, '<?= $t['status'] ?>', '<?= esc($t['nomor_meja']) ?>', <?= $t['kapasitas'] ?>)">
+                    <i class="bi bi-arrow-repeat"></i> Status
+                </button>
+                <?php if (session()->get('role') === 'admin'): ?>
                 <a href="<?= base_url('table/edit/' . $t['id_table']) ?>"
                    class="btn-meja-action btn-meja-edit">
                     <i class="bi bi-pencil"></i> Edit
@@ -601,79 +486,19 @@ foreach ($tables as $t) {
                         onclick="confirmDelete(<?= $t['id_table'] ?>, '<?= esc($t['nomor_meja']) ?>')">
                     <i class="bi bi-trash3"></i>
                 </button>
+                <?php endif; ?>
             </div>
-            <?php endif; ?>
         </div>
         <?php endforeach; ?>
     <?php endif; ?>
 </div>
 
 <?php if (session()->get('role') === 'admin'): ?>
-<!-- ══════════════════════════════════════
-     MODAL TAMBAH MEJA
-══════════════════════════════════════ -->
-<div class="modal fade bs-modal-custom" id="modalTambah" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:460px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="bi bi-plus-circle"></i> Tambah Meja Baru
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="<?= base_url('table/store') ?>" method="POST">
-                <?= csrf_field() ?>
-                <div class="modal-body">
-
-                    <label class="field-label">
-                        Nomor Meja <span style="color:var(--sky);">*</span>
-                    </label>
-                    <div class="field-wrap">
-                        <i class="bi bi-hash field-icon"></i>
-                        <input type="text" name="nomor_meja" class="form-input"
-                               placeholder="Contoh: A9, B7, C3"
-                               maxlength="10" required>
-                    </div>
-
-                    <label class="field-label">
-                        Kapasitas <span style="color:var(--sky);">*</span>
-                    </label>
-                    <div class="field-wrap">
-                        <i class="bi bi-people field-icon"></i>
-                        <input type="number" name="kapasitas" class="form-input"
-                               placeholder="Jumlah kursi" min="1" max="20" required>
-                    </div>
-
-                    <label class="field-label">Status</label>
-                    <div class="field-wrap" style="margin-bottom:0;">
-                        <i class="bi bi-circle-half field-icon"></i>
-                        <select name="status" class="form-select-custom">
-                            <option value="available">Tersedia</option>
-                            <option value="occupied">Terisi</option>
-                            <option value="reserved">Dipesan</option>
-                        </select>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">
-                        Batal
-                    </button>
-                    <button type="submit" class="btn-modal-save">
-                        <i class="bi bi-check-lg"></i> Simpan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <!-- Delete hidden form -->
 <form id="formDelete" action="" method="POST" style="display:none;">
     <?= csrf_field() ?>
-    <!-- <input type="hidden" name="_method" value="DELETE"> -->
 </form>
-<?php endif; // end admin only ?>
+<?php endif; ?>
 
 <script>
 /* ── Filter & Search ── */
@@ -733,4 +558,63 @@ function confirmDelete(id, nomor) {
     form.submit();
 }
 <?php endif; ?>
+
+/* ── Ubah Status (semua role) ── */
+function ubahStatus(id, currentStatus, nomor, kapasitas) {
+    const labels = { available: 'Tersedia', occupied: 'Terisi', reserved: 'Dipesan' };
+    const options = ['available', 'occupied', 'reserved']
+        .map(s => `<option value="${s}" ${s === currentStatus ? 'selected' : ''}>${labels[s]}</option>`)
+        .join('');
+
+    // Buat modal sederhana
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    overlay.innerHTML = `
+        <div style="background:#fff;border-radius:16px;padding:28px;width:320px;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+            <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:16px;color:#1A1A2E;margin-bottom:12px;">Ubah Status Meja</div>
+            <div style="background:linear-gradient(135deg,#0D1B3E,#162952);border-radius:12px;padding:14px 18px;margin-bottom:18px;display:flex;align-items:center;gap:14px;">
+                <div style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:800;font-size:28px;color:#fff;line-height:1;">${nomor}</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.5);"><i class="bi bi-people" style="margin-right:4px;"></i>${kapasitas} orang</div>
+            </div>
+            <div style="font-size:12.5px;color:#8A8FAB;margin-bottom:8px;font-weight:500;">Pilih status baru</div>            <select id="statusPilihan" style="width:100%;height:44px;padding:0 14px;border:1.5px solid #ECEEF5;border-radius:10px;font-size:13.5px;font-family:'DM Sans',sans-serif;background:#FAFBFD;margin-bottom:18px;cursor:pointer;">
+                ${options}
+            </select>
+            <div style="display:flex;gap:10px;justify-content:flex-end;">
+                <button onclick="this.closest('[style]').remove()" style="height:40px;padding:0 18px;border:1.5px solid #ECEEF5;background:#fff;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:600;font-size:13px;cursor:pointer;color:#8A8FAB;">Batal</button>
+                <button onclick="submitStatus(${id})" style="height:40px;padding:0 18px;background:linear-gradient(135deg,#9B89C4,#2EC4B6);border:none;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:13px;color:#fff;cursor:pointer;">Simpan</button>
+            </div>
+        </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
+
+function submitStatus(id) {
+    const status    = document.getElementById('statusPilihan').value;
+    const csrfName  = '<?= csrf_token() ?>';
+    const csrfValue = '<?= csrf_hash() ?>';
+
+    fetch(`<?= base_url('table/update-status/') ?>${id}?${csrfName}=${csrfValue}`, {
+        method : 'POST',
+        headers: {
+            'Content-Type'    : 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        body: JSON.stringify({ status, [csrfName]: csrfValue })
+    })
+    .then(r => {
+        console.log('Status:', r.status);
+        console.log('Headers:', [...r.headers.entries()]);
+        return r.text();
+    })
+    .then(text => {
+        console.log('Response:', text);
+        try {
+            const data = JSON.parse(text);
+            if (data.success) location.reload();
+            else alert(data.message);
+        } catch(e) {
+            alert('Response: ' + text);
+        }
+    });
+}
 </script>

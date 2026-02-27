@@ -58,14 +58,15 @@ $routes->group("", ["filter" => "auth"], function($routes) {
         $routes->post("toggle/(:num)", "PromoController::toggle/$1");
     });
 
-    // Table - index & status semua, CRUD admin only
-    $routes->group("table", function($routes) {
-        $routes->get("/",              "TableController::index");
-        $routes->post("status/(:num)", "TableController::updateStatus/$1");
-        $routes->get("edit/(:num)",    "TableController::edit/$1",    ["filter" => "admin"]);
-        $routes->post("store",         "TableController::store",      ["filter" => "admin"]);
-        $routes->post("update/(:num)", "TableController::update/$1",  ["filter" => "admin"]);
-        $routes->post("delete/(:num)", "TableController::delete/$1",  ["filter" => "admin"]);
+    // Table - INI FIXXX
+        $routes->group('table', ['filter' => 'auth'], function($routes) {
+        $routes->get('/',                     'TableController::index');                            // admin + kasir
+        $routes->post('update-status/(:num)', 'TableController::updateStatus/$1');                 // admin + kasir (AJAX)
+        $routes->get('create',                'TableController::create',    ['filter' => 'admin']); // admin only
+        $routes->get('edit/(:num)',           'TableController::edit/$1',   ['filter' => 'admin']); // admin only
+        $routes->post('store',                'TableController::store',     ['filter' => 'admin']); // admin only
+        $routes->post('update/(:num)',        'TableController::update/$1', ['filter' => 'admin']); // admin only
+        $routes->post('delete/(:num)',        'TableController::delete/$1', ['filter' => 'admin']); // admin only
     });
 
     // Laporan (kasir hanya lihat miliknya, dihandle di controller)
