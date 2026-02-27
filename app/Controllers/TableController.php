@@ -143,7 +143,10 @@ class TableController extends BaseController
     ───────────────────────────────────── */
     public function updateStatus(int $id)
     {
-        if (! $this->request->isAJAX()) {
+        $isAjax = $this->request->getHeaderLine('X-Requested-With') === 'XMLHttpRequest'
+               || $this->request->isAJAX();
+
+        if (! $isAjax) {
             return $this->response->setStatusCode(403);
         }
 

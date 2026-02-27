@@ -339,7 +339,7 @@
             padding: 4px 10px;
             border-radius: 6px;
         }
-
+        
         /* Badge — sky for admin, yellow for kasir */
         .topbar-badge {
             font-size: 12px; font-weight: 700;
@@ -448,18 +448,6 @@
             <div class="nav-icon"><i class="bi bi-people-fill"></i></div>
             Employee
         </a>
-        <?php endif; ?>
-
-        <?php if ($role === 'kasir'): ?>
-        <div class="nav-label">Menu</div>
-
-        <a href="<?= base_url('menu') ?>"
-           data-color="purple"
-           class="nav-item <?= str_starts_with(uri_string(), 'menu') ? 'active' : '' ?>">
-            <div class="nav-icon"><i class="bi bi-book-half"></i></div>
-            Menu
-        </a>
-        <?php endif; ?>
 
         <div class="nav-label">Laporan</div>
 
@@ -469,6 +457,36 @@
             <div class="nav-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
             Laporan Keuangan
         </a>
+
+        <?php endif; ?>
+
+        <?php if ($role === 'kasir'): ?>
+        <div class="nav-label">Kelola</div>
+
+        <a href="<?= base_url('menu') ?>"
+           data-color="purple"
+           class="nav-item <?= str_starts_with(uri_string(), 'menu') ? 'active' : '' ?>">
+            <div class="nav-icon"><i class="bi bi-book-half"></i></div>
+            Menu
+        </a>
+
+        <a href="<?= base_url('table') ?>"
+           data-color="sky2"
+           class="nav-item <?= str_starts_with(uri_string(), 'table') ? 'active' : '' ?>">
+            <div class="nav-icon"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+            Meja
+        </a>
+
+        <div class="nav-label">Laporan</div>
+
+        <a href="<?= base_url('laporan') ?>"
+           data-color="report"
+           class="nav-item <?= str_starts_with(uri_string(), 'laporan') ? 'active' : '' ?>">
+            <div class="nav-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
+            Laporan Keuangan
+        </a>
+
+        <?php endif; ?>
 
         <div class="nav-label">Akun</div>
 
