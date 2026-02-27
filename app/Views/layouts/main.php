@@ -379,7 +379,65 @@
             .hamburger { display: block; }
             .topbar-datetime { display: none; }
             .page-content { padding: 20px 16px; }
+            .btn-collapse-sidebar { display: none !important; }
         }
+
+        /* ══ Sidebar Collapsed ══ */
+        .sidebar { transition: width 0.25s cubic-bezier(.4,0,.2,1); }
+        .main-wrap { transition: margin-left 0.25s cubic-bezier(.4,0,.2,1); }
+
+        .sidebar.collapsed { width: 64px; }
+        .sidebar.collapsed ~ .main-wrap { margin-left: 64px; }
+
+        /* Sembunyikan semua teks & label secara instan */
+        .sidebar.collapsed .brand-name,
+        .sidebar.collapsed .nav-label,
+        .sidebar.collapsed .nav-item .nav-text,
+        .sidebar.collapsed .user-name,
+        .sidebar.collapsed .user-role,
+        .sidebar.collapsed .bi-chevron-right,
+        .sidebar.collapsed .logout-text {
+            display: none !important;
+        }
+
+        /* Tengahkan semua item */
+        .sidebar.collapsed .sidebar-brand { justify-content: center; padding: 20px 0 16px; }
+        .sidebar.collapsed .nav-item { justify-content: center; padding: 9px 0; }
+        .sidebar.collapsed .user-card { justify-content: center; padding: 10px 0; }
+        .sidebar.collapsed .btn-logout { justify-content: center; padding: 9px 0; }
+        .sidebar.collapsed .sidebar-footer { padding: 12px 8px; }
+
+        /* Tooltip saat hover collapsed */
+        .sidebar.collapsed .nav-item { position: relative; }
+        .sidebar.collapsed .nav-item:hover::after {
+            content: attr(data-label);
+            position: absolute;
+            left: calc(100% + 10px);
+            top: 50%; transform: translateY(-50%);
+            background: var(--navy);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            z-index: 300;
+            font-family: 'DM Sans', sans-serif;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+            pointer-events: none;
+        }
+
+        /* Tombol toggle di topbar */
+        .btn-collapse-sidebar {
+            background: none;
+            border: 1.5px solid var(--border);
+            border-radius: 9px;
+            width: 34px; height: 34px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; color: var(--text-muted);
+            cursor: pointer; transition: all 0.18s; flex-shrink: 0;
+        }
+        .btn-collapse-sidebar:hover { background: var(--bg); border-color: var(--sky); color: var(--sky); }
     </style>
 </head>
 <body>
@@ -405,57 +463,57 @@
         <div class="nav-label">Utama</div>
 
         <a href="<?= base_url('dashboard') ?>"
-           data-color="sky"
+           data-color="sky" data-label="Dashboard"
            class="nav-item <?= uri_string() === 'dashboard' ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-grid-1x2-fill"></i></div>
-            Dashboard
+            <span class="nav-text">Dashboard</span>
         </a>
 
         <a href="<?= base_url('transaksi') ?>"
-           data-color="tosca"
+           data-color="tosca" data-label="Transaksi"
            class="nav-item <?= str_starts_with(uri_string(), 'transaksi') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-receipt"></i></div>
-            Transaksi
+            <span class="nav-text">Transaksi</span>
         </a>
 
         <?php if ($role === 'admin'): ?>
         <div class="nav-label">Manajemen</div>
 
         <a href="<?= base_url('menu') ?>"
-           data-color="purple"
+           data-color="purple" data-label="Menu"
            class="nav-item <?= str_starts_with(uri_string(), 'menu') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-book-half"></i></div>
-            Menu
+            <span class="nav-text">Menu</span>
         </a>
 
         <a href="<?= base_url('promo') ?>"
-           data-color="yellow"
+           data-color="yellow" data-label="Promo"
            class="nav-item <?= str_starts_with(uri_string(), 'promo') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-ticket-perforated-fill"></i></div>
-            Promo
+            <span class="nav-text">Promo</span>
         </a>
 
         <a href="<?= base_url('table') ?>"
-           data-color="sky2"
+           data-color="sky2" data-label="Meja"
            class="nav-item <?= str_starts_with(uri_string(), 'table') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-grid-3x3-gap-fill"></i></div>
-            Meja
+            <span class="nav-text">Meja</span>
         </a>
 
         <a href="<?= base_url('employee') ?>"
-           data-color="deep"
+           data-color="deep" data-label="Employee"
            class="nav-item <?= str_starts_with(uri_string(), 'employee') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-people-fill"></i></div>
-            Employee
+            <span class="nav-text">Employee</span>
         </a>
 
         <div class="nav-label">Laporan</div>
 
         <a href="<?= base_url('laporan') ?>"
-           data-color="report"
+           data-color="report" data-label="Laporan Keuangan"
            class="nav-item <?= str_starts_with(uri_string(), 'laporan') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
-            Laporan Keuangan
+            <span class="nav-text">Laporan Keuangan</span>
         </a>
 
         <?php endif; ?>
@@ -464,26 +522,26 @@
         <div class="nav-label">Kelola</div>
 
         <a href="<?= base_url('menu') ?>"
-           data-color="purple"
+           data-color="purple" data-label="Menu"
            class="nav-item <?= str_starts_with(uri_string(), 'menu') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-book-half"></i></div>
-            Menu
+            <span class="nav-text">Menu</span>
         </a>
 
         <a href="<?= base_url('table') ?>"
-           data-color="sky2"
+           data-color="sky2" data-label="Meja"
            class="nav-item <?= str_starts_with(uri_string(), 'table') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-grid-3x3-gap-fill"></i></div>
-            Meja
+            <span class="nav-text">Meja</span>
         </a>
 
         <div class="nav-label">Laporan</div>
 
         <a href="<?= base_url('laporan') ?>"
-           data-color="report"
+           data-color="report" data-label="Laporan Keuangan"
            class="nav-item <?= str_starts_with(uri_string(), 'laporan') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-bar-chart-line-fill"></i></div>
-            Laporan Keuangan
+            <span class="nav-text">Laporan Keuangan</span>
         </a>
 
         <?php endif; ?>
@@ -491,10 +549,10 @@
         <div class="nav-label">Akun</div>
 
         <a href="<?= base_url('profile') ?>"
-           data-color="profile"
+           data-color="profile" data-label="Profil Saya"
            class="nav-item <?= str_starts_with(uri_string(), 'profile') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-person-circle"></i></div>
-            Profil Saya
+            <span class="nav-text">Profil Saya</span>
         </a>
 
     </nav>
@@ -512,7 +570,7 @@
             <i class="bi bi-chevron-right" style="color:rgba(255,255,255,0.18); font-size:11px; flex-shrink:0;"></i>
         </a>
         <a href="<?= base_url('logout') ?>" class="btn-logout">
-            <i class="bi bi-box-arrow-left"></i> Keluar
+            <i class="bi bi-box-arrow-left"></i> <span class="logout-text">Keluar</span>
         </a>
     </div>
 </aside>
@@ -523,6 +581,9 @@
         <div class="d-flex align-items-center gap-3">
             <button class="hamburger" onclick="toggleSidebar()">
                 <i class="bi bi-list"></i>
+            </button>
+            <button class="btn-collapse-sidebar" onclick="collapseSidebar()" title="Toggle Sidebar">
+                <i class="bi bi-layout-sidebar" id="collapseIcon"></i>
             </button>
             <div class="topbar-title"><?= $title ?? 'BiteSpace' ?></div>
         </div>
@@ -575,6 +636,23 @@
         const ov = document.getElementById('overlay');
         ov.style.display = ov.style.display === 'none' ? 'block' : 'none';
     }
+
+    function collapseSidebar() {
+        const sidebar   = document.getElementById('sidebar');
+        const icon      = document.getElementById('collapseIcon');
+        const collapsed = sidebar.classList.toggle('collapsed');
+        icon.className  = collapsed ? 'bi bi-layout-sidebar-reverse' : 'bi bi-layout-sidebar';
+        localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+    }
+
+    // Restore state
+    (function() {
+        if (localStorage.getItem('sidebarCollapsed') === '1') {
+            document.getElementById('sidebar').classList.add('collapsed');
+            const icon = document.getElementById('collapseIcon');
+            if (icon) icon.className = 'bi bi-layout-sidebar-reverse';
+        }
+    })();
 
     (function() {
         function updateClock() {
