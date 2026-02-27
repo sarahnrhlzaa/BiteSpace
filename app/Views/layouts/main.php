@@ -450,6 +450,17 @@
         </a>
         <?php endif; ?>
 
+        <?php if ($role === 'kasir'): ?>
+        <div class="nav-label">Menu</div>
+
+        <a href="<?= base_url('menu') ?>"
+           data-color="purple"
+           class="nav-item <?= str_starts_with(uri_string(), 'menu') ? 'active' : '' ?>">
+            <div class="nav-icon"><i class="bi bi-book-half"></i></div>
+            Menu
+        </a>
+        <?php endif; ?>
+
         <div class="nav-label">Laporan</div>
 
         <a href="<?= base_url('laporan') ?>"

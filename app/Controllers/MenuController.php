@@ -19,6 +19,24 @@ class MenuController extends BaseController
         $this->categoryModel = new CategoryModel();
     }
 
+    // ── Helper: cek role (case-insensitive) ───────────────
+    private function getRole(): string
+    {
+        return strtolower((string) session()->get('role'));
+    }
+
+    private function isAdmin(): bool
+    {
+        return $this->getRole() === 'admin';
+    }
+
+    // ── Helper: tolak akses bukan admin ───────────────────
+    private function adminOnly()
+    {
+        return redirect()->to(base_url('menu'))
+            ->with('error', 'Akses ditolak. Hanya admin yang dapat melakukan tindakan ini.');
+    }
+
     // ── INDEX ──────────────────────────────────────────────
     public function index()
     {
@@ -27,12 +45,15 @@ class MenuController extends BaseController
             'content'    => 'menu/index',
             'menus'      => $this->menuModel->getMenuWithCategory(),
             'categories' => $this->categoryModel->findAll(),
+            'isAdmin'    => $this->isAdmin(),   // <-- dikirim ke view
         ]);
     }
 
     // ── CREATE (form) ──────────────────────────────────────
     public function create()
     {
+        if (! $this->isAdmin()) return $this->adminOnly();
+
         return view('layouts/main', [
             'title'      => 'Tambah Menu',
             'content'    => 'menu/create',
@@ -43,6 +64,8 @@ class MenuController extends BaseController
     // ── STORE (proses simpan) ──────────────────────────────
     public function store()
     {
+        if (! $this->isAdmin()) return $this->adminOnly();
+
         $rules = [
             'nama_menu'   => 'required|max_length[150]',
             'harga'       => 'required|numeric|greater_than_equal_to[0]',
@@ -81,6 +104,8 @@ class MenuController extends BaseController
     // ── EDIT (form) ────────────────────────────────────────
     public function edit($id)
     {
+        if (! $this->isAdmin()) return $this->adminOnly();
+
         $menu = $this->menuModel->find($id);
 
         if (! $menu) {
@@ -99,6 +124,8 @@ class MenuController extends BaseController
     // ── UPDATE (proses edit) ───────────────────────────────
     public function update($id)
     {
+        if (! $this->isAdmin()) return $this->adminOnly();
+
         $menu = $this->menuModel->find($id);
 
         if (! $menu) {
@@ -159,6 +186,8 @@ class MenuController extends BaseController
     // ── DELETE ─────────────────────────────────────────────
     public function delete($id)
     {
+        if (! $this->isAdmin()) return $this->adminOnly();
+
         $menu = $this->menuModel->find($id);
 
         if (! $menu) {
@@ -177,11 +206,14 @@ class MenuController extends BaseController
             ->with('success', 'Menu berhasil dihapus.');
     }
 
-    // ── TOGGLE AVAILABLE (AJAX) ────────────────────────────
+    // ── TOGGLE AVAILABLE (AJAX) — admin & kasir boleh ─────
     public function toggle($id)
     {
-        if (! $this->request->isAJAX()) {
-            return $this->response->setJSON(['success' => false, 'message' => 'Invalid request']);
+        // Cek role: hanya admin dan kasir yang boleh toggle
+        $role = $this->getRole();
+        if (! in_array($role, ['admin', 'kasir'])) {
+            return $this->response->setStatusCode(403)
+                ->setJSON(['success' => false, 'message' => 'Akses ditolak']);
         }
 
         $menu = $this->menuModel->find($id);
@@ -189,8 +221,13 @@ class MenuController extends BaseController
             return $this->response->setJSON(['success' => false, 'message' => 'Menu tidak ditemukan']);
         }
 
+        // Baca nilai dari JSON body atau POST biasa
         $body = $this->request->getJSON(true);
-        $val  = isset($body['is_available']) ? (int) $body['is_available'] : 0;
+        if ($body && isset($body['is_available'])) {
+            $val = (int) $body['is_available'];
+        } else {
+            $val = (int) $this->request->getPost('is_available');
+        }
 
         $this->menuModel->update($id, ['is_available' => $val]);
 

@@ -116,7 +116,6 @@
         transition: all 0.18s;
     }
     .pg-btn:hover:not(:disabled):not(.pg-active) { border-color: #2EC4B6; color: #2EC4B6; background: rgba(46,196,182,0.06); }
-    /* aktif → navy, sama seperti cal-day.today di dashboard */
     .pg-btn.pg-active { background: #0D1B3E; border-color: #0D1B3E; color: #fff; box-shadow: 0 4px 10px rgba(13,27,62,0.22); cursor: default; }
     .pg-btn:disabled { opacity: 0.35; cursor: not-allowed; }
     .pg-dots { min-width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-muted); font-weight: 600; }
@@ -134,9 +133,17 @@
     .btn-cancel-modal:hover { background: var(--bg); }
     .btn-confirm-delete { padding: 10px 24px; border-radius: 10px; border: none; background: #ef4444; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13.5px; cursor: pointer; transition: all 0.2s; }
     .btn-confirm-delete:hover { background: #dc2626; }
+
+    /* ── Role badge ── */
+    .role-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    }
+    .role-badge.kasir { background: rgba(255,209,102,0.18); color: #a07800; }
+    .role-badge.admin { background: rgba(46,196,182,0.15); color: #1a7a72; }
 </style>
 
-<!-- Filter Bar (dengan tombol Tambah Menu di kanan) -->
+<!-- Filter Bar -->
 <div class="filter-bar">
     <div class="search-wrap">
         <i class="bi bi-search search-icon"></i>
@@ -156,9 +163,17 @@
     <div class="filter-count">
         Menampilkan <strong id="countShown">-</strong> dari <strong id="countTotal"><?= count($menus) ?></strong> menu
     </div>
-    <a href="<?= base_url('menu/create') ?>" class="btn-primary-bs" style="white-space:nowrap; margin-left:auto;">
-        <i class="bi bi-plus-lg"></i> Tambah Menu
-    </a>
+
+    <?php if ($isAdmin): ?>
+        <!-- Tombol Tambah Menu: hanya admin -->
+        <a href="<?= base_url('menu/create') ?>" class="btn-primary-bs" style="white-space:nowrap; margin-left:auto;">
+            <i class="bi bi-plus-lg"></i> Tambah Menu
+        </a>
+    <?php else: ?>
+        <!-- Kasir: info badge -->
+        <span class="role-badge kasir" style="margin-left:auto;">
+            <i class="bi bi-person-badge"></i> Mode Kasir
+    <?php endif; ?>
 </div>
 
 <!-- Table Card -->
@@ -166,10 +181,12 @@
     <?php if (empty($menus)): ?>
         <div class="empty-state">
             <div class="empty-icon">🍽️</div>
-            <p>Belum ada menu. Yuk tambah menu pertama!</p>
-            <a href="<?= base_url('menu/create') ?>" class="btn-primary-bs">
-                <i class="bi bi-plus-lg"></i> Tambah Menu
-            </a>
+            <p>Belum ada menu.</p>
+            <?php if ($isAdmin): ?>
+                <a href="<?= base_url('menu/create') ?>" class="btn-primary-bs">
+                    <i class="bi bi-plus-lg"></i> Tambah Menu
+                </a>
+            <?php endif; ?>
         </div>
     <?php else: ?>
     <div style="overflow-x:auto;">
@@ -181,7 +198,9 @@
                     <th>Kategori</th>
                     <th>Harga</th>
                     <th>Status</th>
-                    <th style="width:100px; text-align:center;">Aksi</th>
+                    <?php if ($isAdmin): ?>
+                        <th style="width:100px; text-align:center;">Aksi</th>
+                    <?php endif; ?>
                 </tr>
             </thead>
             <tbody id="menuTableBody">
@@ -209,13 +228,16 @@
                     <td><span class="cat-pill"><?= esc($menu['nama_category'] ?? '-') ?></span></td>
                     <td><span class="price-text">Rp <?= number_format($menu['harga'], 0, ',', '.') ?></span></td>
                     <td>
+                        <!-- Toggle: bisa dipakai admin & kasir -->
                         <label class="toggle-switch" title="<?= $menu['is_available'] ? 'Klik untuk nonaktifkan' : 'Klik untuk aktifkan' ?>">
                             <input type="checkbox" <?= $menu['is_available'] ? 'checked' : '' ?>
                                    onchange="toggleAvailable(<?= $menu['id_menu'] ?>, this)">
                             <span class="toggle-slider"></span>
                         </label>
                     </td>
+                    <?php if ($isAdmin): ?>
                     <td>
+                        <!-- Edit & Delete: hanya admin -->
                         <div style="display:flex; gap:6px; justify-content:center;">
                             <a href="<?= base_url('menu/edit/' . $menu['id_menu']) ?>" class="btn-action btn-edit" title="Edit">
                                 <i class="bi bi-pencil"></i>
@@ -226,6 +248,7 @@
                             </button>
                         </div>
                     </td>
+                    <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -240,7 +263,8 @@
     <?php endif; ?>
 </div>
 
-<!-- Delete Modal -->
+<!-- Delete Modal (hanya dirender kalau admin, tapi aman dirender karena tombolnya saja yang disembunyikan) -->
+<?php if ($isAdmin): ?>
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
         <div class="modal-icon">🗑️</div>
@@ -255,7 +279,9 @@
         </div>
     </div>
 </div>
+<?php endif; ?>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 (function () {
     const PER_PAGE  = 10;
@@ -353,21 +379,80 @@
 
 function toggleAvailable(id, checkbox) {
     const val = checkbox.checked ? 1 : 0;
+    const row = checkbox.closest('tr');
+
+    // Inisialisasi SweetAlert2 Toast
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+
     fetch(`<?= base_url('menu/toggle/') ?>${id}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-        body: JSON.stringify({ is_available: val, <?= csrf_token() ?>: '<?= csrf_hash() ?>' })
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('input[name="<?= csrf_token() ?>"]').value 
+        },
+        body: JSON.stringify({ is_available: val })
     })
     .then(r => r.json())
-    .then(d => { if (!d.success) { checkbox.checked = !checkbox.checked; alert('Gagal mengubah status menu.'); } })
-    .catch(() => { checkbox.checked = !checkbox.checked; });
+    .then(d => { 
+        if (d.success) {
+            if (row) row.setAttribute('data-status', val);
+            
+            // Notifikasi Sukses
+            Toast.fire({
+                icon: 'success',
+                title: d.message // Mengambil pesan dari Controller ("Menu diaktifkan/dinonaktifkan")
+            });
+        } else {
+            checkbox.checked = !checkbox.checked;
+            Toast.fire({
+                icon: 'error',
+                title: 'Gagal mengubah status.'
+            });
+        }
+    })
+    .catch(() => { 
+        checkbox.checked = !checkbox.checked;
+        Toast.fire({
+            icon: 'error',
+            title: 'Terjadi kesalahan jaringan.'
+        });
+    });
 }
 
+
+
+<?php if ($isAdmin): ?>
 function confirmDelete(id, nama) {
-    document.getElementById('deleteModalDesc').textContent = `Menu "${nama}" akan dihapus permanen dan tidak bisa dikembalikan.`;
-    document.getElementById('deleteForm').action = `<?= base_url('menu/delete/') ?>${id}`;
-    document.getElementById('deleteModal').classList.add('show');
+    Swal.fire({
+        title: 'Hapus Menu?',
+        text: `Menu "${nama}" akan dihapus permanen!`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#0D1B3E',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Jika user klik hapus, submit form delete-nya
+            const form = document.getElementById('deleteForm');
+            form.action = `<?= base_url('menu/delete/') ?>${id}`;
+            form.submit();
+        }
+    });
 }
 function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('show'); }
-    document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+document.getElementById('deleteModal').addEventListener('click', function(e) { if (e.target === this) closeDeleteModal(); });
+<?php endif; ?>
 </script>

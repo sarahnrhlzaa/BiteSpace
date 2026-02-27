@@ -1,6 +1,8 @@
 <style>
     /* ══ BiteSpace Palette
-    .form-card {
+    .
+    
+    {
         background: #fff; border-radius: 16px;
         border: 1px solid var(--border); overflow: hidden;
         animation: fadeUp 0.4s ease both;
@@ -57,6 +59,50 @@
         padding: 3px 10px; border-radius: 6px;
         font-family: 'Plus Jakarta Sans', sans-serif; text-transform: uppercase;
     }
+    
+.form-card-header {
+    padding: 16px 20px;
+    border-bottom: 1.5px solid var(--border);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.form-card-header-inner {
+    display: flex;          /* bukan inline-flex agar full-width */
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 0;             /* padding sudah ada di parent */
+    border-radius: 0;
+    background: transparent;
+    border: none;
+}
+
+.form-card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: rgba(75, 163, 195, 0.10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.form-card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 14.5px;
+    color: var(--dark);
+    margin: 0;
+    line-height: 1;
+}
+
+.form-card-body {
+    padding: 20px 20px 24px 20px;
+}
 
     /* ── Fields ── */
     .field-label {
@@ -216,12 +262,14 @@
 
         <!-- Meta info -->
         <div class="form-card" style="margin-bottom:16px;">
-            <div class="form-card-header">
-                <div class="form-card-icon" style="background:rgba(13,27,62,0.07);">
-                    <i class="bi bi-info-circle" style="color:var(--navy);"></i>
-                </div>
-                <div class="form-card-title">Info Akun</div>
-            </div>
+                    <div class="form-card-header">
+                        <div class="form-card-header-inner">
+                            <div class="form-card-icon">
+                                <i class="bi bi-info-circle" style="color:var(--sky);"></i>
+                            </div>
+                            <div class="form-card-title">Info Akun</div>
+                        </div>
+                    </div>
             <div class="form-card-body" style="padding:16px 24px;">
                 <div style="display:flex;flex-direction:column;gap:10px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--border);">
@@ -272,7 +320,6 @@
             <form action="<?= base_url('employee/delete/' . $employee['id_user']) ?>" method="POST"
                   onsubmit="return confirm('Hapus akun <?= esc($employee['nama_lengkap']) ?>? Tindakan ini tidak dapat dibatalkan.')">
                 <?= csrf_field() ?>
-                <input type="hidden" name="_method" value="DELETE">
                 <button type="submit" class="btn-danger">
                     <i class="bi bi-trash3"></i> Hapus Akun Ini
                 </button>
@@ -295,10 +342,12 @@
     <div class="col-lg-8">
         <div class="form-card">
             <div class="form-card-header">
-                <div class="form-card-icon" style="background:rgba(46,196,182,0.12);">
-                    <i class="bi bi-pencil-square" style="color:var(--tosca);"></i>
+                <div class="form-card-header-inner">
+                    <div class="form-card-icon">
+                        <i class="bi bi-pencil-square" style="color:var(--sky);"></i>
+                    </div>
+                    <div class="form-card-title">Edit Data Employee</div>
                 </div>
-                <div class="form-card-title">Edit Data Employee</div>
             </div>
             <div class="form-card-body">
 

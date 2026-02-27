@@ -27,6 +27,17 @@ class EmployeeController extends BaseController
     }
 
     /* ─────────────────────────────────────
+       GET /employee/create  →  form tambah
+    ───────────────────────────────────── */
+    public function create()
+    {
+        return view('layouts/main', [
+            'title'   => 'Tambah Employee',
+            'content' => 'employee/create',
+        ]);
+    }
+
+    /* ─────────────────────────────────────
        GET /employee/edit/{id}  →  form edit
     ───────────────────────────────────── */
     public function edit(int $id)

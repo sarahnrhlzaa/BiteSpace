@@ -44,7 +44,7 @@ class MenuSeeder extends Seeder
                 'id_category'  => 1,
                 'nama_menu'    => 'Soto Ayam Kampung',
                 'deskripsi'    => 'Soto kuah bening dengan ayam kampung, telur rebus, kentang, dan tauge. Disajikan dengan nasi dan kerupuk.',
-                'gambar'       => '1772096780_d01cb259940724ada1b0.jpg',
+                'gambar'       => '1772096825_4dcc63251ac4c36f2c08.webp',
                 'harga'        => 22000,
                 'is_available' => 1,
                 'created_at'   => date('Y-m-d H:i:s'),

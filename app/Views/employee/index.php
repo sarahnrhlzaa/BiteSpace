@@ -1,7 +1,4 @@
 <style>
-    /* ══ BiteSpace Palette
-
-    /* ── Stats ── */
     .emp-stats {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
@@ -271,7 +268,7 @@
 
     .hint-text {
         font-size: 11.5px; color: var(--text-muted);
-        margin-top: -12px; margin-bottom: 18px; padding-left: 2px;
+        margin-top: 0px; margin-bottom: 18px; padding-left: 2px;
     }
 
     @keyframes fadeUp {
@@ -294,15 +291,6 @@ $admin   = count(array_filter($employees, fn($e) => $e['role'] === 'admin'));
 $kasir   = count(array_filter($employees, fn($e) => $e['role'] === 'kasir'));
 $aktif   = count(array_filter($employees, fn($e) => $e['is_active'] == 1));
 ?>
-
-<?php if (session()->getFlashdata('success')): ?>
-<?= session()->getFlashdata('success') ?>
-</div>
-<?php endif; ?>
-<?php if (session()->getFlashdata('error')): ?>
- <?= session()->getFlashdata('error') ?>
-</div>
-<?php endif; ?>
 
 <!-- ── STATS ── -->
 <div class="emp-stats">
@@ -362,9 +350,9 @@ $aktif   = count(array_filter($employees, fn($e) => $e['is_active'] == 1));
             <option value="0">Nonaktif</option>
         </select>
     </div>
-    <button class="btn-add-emp" data-bs-toggle="modal" data-bs-target="#modalTambah">
+    <a href="<?= base_url('employee/create') ?>" class="btn-add-emp">
         <i class="bi bi-person-plus-fill"></i> Tambah Employee
-    </button>
+    </a>
 </div>
 
 <!-- ── TABLE ── -->
@@ -443,7 +431,7 @@ $aktif   = count(array_filter($employees, fn($e) => $e['is_active'] == 1));
                             <i class="bi bi-trash3"></i>
                         </button>
                         <?php else: ?>
-                        <span title="Akun aktif kamu" style="padding:0 6px; font-size:11px; color:var(--text-muted); display:flex; align-items:center;">
+                        <span title="Akun aktifmu" style="padding:0 6px; font-size:11px; color:var(--text-muted); display:flex; align-items:center;">
                             <i class="bi bi-person-check-fill" style="color:var(--tosca);"></i>
                         </span>
                         <?php endif; ?>
@@ -456,96 +444,12 @@ $aktif   = count(array_filter($employees, fn($e) => $e['is_active'] == 1));
     <?php endif; ?>
 </div>
 
-<!-- ══ MODAL TAMBAH ══ -->
-<div class="modal fade bs-modal-custom" id="modalTambah" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:500px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-title">
-                    <i class="bi bi-person-plus-fill"></i> Tambah Employee Baru
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form action="<?= base_url('employee/store') ?>" method="POST">
-                <?= csrf_field() ?>
-                <div class="modal-body">
-
-                    <label class="field-label">Nama Lengkap <span style="color:var(--sky);">*</span></label>
-                    <div class="field-wrap">
-                        <i class="bi bi-person field-icon"></i>
-                        <input type="text" name="nama_lengkap" class="form-input"
-                               placeholder="Nama lengkap" required>
-                    </div>
-
-                    <label class="field-label">Username <span style="color:var(--sky);">*</span></label>
-                    <div class="field-wrap">
-                        <i class="bi bi-at field-icon"></i>
-                        <input type="text" name="username" class="form-input"
-                               placeholder="Username unik" required>
-                    </div>
-
-                    <label class="field-label">Email</label>
-                    <div class="field-wrap">
-                        <i class="bi bi-envelope field-icon"></i>
-                        <input type="email" name="email" class="form-input"
-                               placeholder="Email (opsional)">
-                    </div>
-
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <label class="field-label">Role <span style="color:var(--sky);">*</span></label>
-                            <div class="field-wrap" style="margin-bottom:0;">
-                                <i class="bi bi-shield-half field-icon"></i>
-                                <select name="role" class="form-select-custom">
-                                    <option value="kasir">Kasir</option>
-                                    <option value="admin">Admin</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <label class="field-label">Status</label>
-                            <div class="field-wrap" style="margin-bottom:0;">
-                                <i class="bi bi-toggle-on field-icon"></i>
-                                <select name="is_active" class="form-select-custom">
-                                    <option value="1">Aktif</option>
-                                    <option value="0">Nonaktif</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top:18px;">
-                        <label class="field-label">Password <span style="color:var(--sky);">*</span></label>
-                        <div class="field-wrap" style="margin-bottom:4px;">
-                            <i class="bi bi-lock field-icon"></i>
-                            <input type="password" name="password" id="addPass" class="form-input"
-                                   placeholder="Minimal 6 karakter" required>
-                            <button type="button" class="toggle-eye" onclick="toggleEye('addPass','addPassEye')">
-                                <i class="bi bi-eye" id="addPassEye"></i>
-                            </button>
-                        </div>
-                        <p class="hint-text"><i class="bi bi-info-circle me-1"></i>Kasir bisa ganti password sendiri lewat halaman profil.</p>
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn-modal-save">
-                        <i class="bi bi-check-lg"></i> Simpan
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 <!-- Hidden forms -->
 <form id="formToggle" action="" method="POST" style="display:none;">
     <?= csrf_field() ?>
 </form>
 <form id="formDelete" action="" method="POST" style="display:none;">
     <?= csrf_field() ?>
-    <input type="hidden" name="_method" value="DELETE">
 </form>
 
 <script>
