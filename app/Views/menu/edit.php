@@ -151,7 +151,7 @@
     <form action="<?= base_url('menu/update/' . $menu['id_menu']) ?>" method="POST"
           enctype="multipart/form-data" id="menuForm">
         <?= csrf_field() ?>
-        <input type="hidden" name="_method" value="PUT">
+        <!-- <input type="hidden" name="_method" value="PUT"> -->
 
         <!-- Info Menu -->
         <div class="form-card">

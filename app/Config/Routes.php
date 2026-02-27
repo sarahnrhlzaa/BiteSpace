@@ -24,9 +24,12 @@ $routes->group("", ["filter" => "auth"], function($routes) {
     $routes->post("profile/change-password", "ProfileController::changePassword");
 
     // Transaksi (admin & kasir)
-    $routes->get("transaksi",          "TransaksiController::index");
-    $routes->post("transaksi/addCart", "TransaksiController::addCart");
-    $routes->post("transaksi/submit",  "TransaksiController::submit");
+    $routes->get("transaksi",              "TransaksiController::index");
+    $routes->post("transaksi/addCart",     "TransaksiController::addCart");
+    $routes->post("transaksi/submit",      "TransaksiController::submit");
+    $routes->post("transaksi/checkout",    "TransaksiController::checkout");
+    $routes->get("transaksi/struk/(:num)", "TransaksiController::struk/$1");
+    $routes->post("transaksi/cek-promo",   "TransaksiController::cekPromo");
 
     // Menu index & toggle - admin + kasir boleh
     $routes->get("menu",                "MenuController::index");

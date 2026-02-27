@@ -873,10 +873,171 @@
 /* ══════════════════════════════════════
    STATE
 ══════════════════════════════════════ */
-let cart       = [];          // [{id_menu, nama_menu, harga, qty, gambar, catatan}]
-let promoData  = null;        // {id_promo, nama_promo, diskon}
-let modalMenu  = null;        // menu yg sedang dibuka di modal
+let cart        = [];   // [{id_menu, nama_menu, harga, qty, gambar, catatan}]
+let promoData   = null; // {id_promo, diskon}
+let modalMenu   = null;
 let metodeBayar = 'cash';
+
+/* ══════════════════════════════════════
+   HELPER
+══════════════════════════════════════ */
+function formatRp(n) {
+    return Number(n).toLocaleString('id-ID');
+}
+
+function getSubtotal() {
+    return cart.reduce((s, c) => s + c.harga * c.qty, 0);
+}
+
+// Ambil CSRF token dengan cara yang lebih aman
+function getCsrfToken() {
+    // Coba ambil dari hidden form checkout (paling reliable)
+    const el = document.querySelector('#formCheckout input[name^="csrf"]');
+    return el ? el.value : '';
+}
+
+function getCsrfName() {
+    const el = document.querySelector('#formCheckout input[name^="csrf"]');
+    return el ? el.name : 'csrf_test_name';
+}
+
+/* ══════════════════════════════════════
+   PROMO — FUNGSI UTAMA
+══════════════════════════════════════ */
+
+/**
+ * Dipanggil setiap kali cart berubah (add / remove / qty change).
+ * Jika ada promo aktif, re-hitung diskon berdasarkan subtotal terbaru.
+ */
+function recalcPromo() {
+    if (!promoData || !promoData.kode) {
+        updateTotals();
+        return;
+    }
+    // Re-validasi ke server dengan subtotal terbaru
+    applyPromo(promoData.kode, false); // false = diam, tidak tampil pesan baru
+}
+
+/**
+ * Core: kirim kode ke server, proses response
+ * @param {string} kode   - kode promo
+ * @param {boolean} verbose - tampilkan pesan sukses/gagal ke UI
+ */
+async function applyPromo(kode, verbose = true) {
+    const subtotal = getSubtotal();
+
+    if (!kode) {
+        promoData = null;
+        if (verbose) showPromoMsg('Masukkan kode promo!', 'error');
+        updateTotals();
+        return;
+    }
+
+    // Kalau cart kosong, reset promo
+    if (subtotal === 0) {
+        promoData = null;
+        updateTotals();
+        return;
+    }
+
+    try {
+        const res = await fetch('<?= base_url('promo/validate-kode') ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                kode_promo: kode.toUpperCase(),
+                subtotal: subtotal,
+                [getCsrfName()]: getCsrfToken(),
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            promoData = {
+                kode     : kode.toUpperCase(),
+                id_promo : data.id_promo,
+                diskon   : parseFloat(data.diskon),
+            };
+
+            if (verbose) {
+                showPromoMsg('✅ ' + data.message, 'success');
+                document.getElementById('promoInput').classList.add('valid');
+                document.getElementById('promoInput').classList.remove('invalid');
+            }
+        } else {
+            // Promo tidak valid / min. transaksi tidak terpenuhi
+            promoData = null;
+            if (verbose) {
+                showPromoMsg('❌ ' + data.message, 'error');
+                document.getElementById('promoInput').classList.add('invalid');
+                document.getElementById('promoInput').classList.remove('valid');
+            } else {
+                // Silent reset — subtotal turun di bawah minimum
+                showPromoMsg('⚠️ Promo dihapus: ' + data.message, 'error');
+                document.getElementById('promoInput').value = '';
+                document.getElementById('promoInput').className = 'promo-input';
+                document.getElementById('promoSelect').value = '';
+            }
+        }
+
+        updateTotals();
+
+    } catch (err) {
+        console.error('Promo fetch error:', err);
+        if (verbose) showPromoMsg('Gagal memverifikasi promo.', 'error');
+    }
+}
+
+/** Dipanggil tombol "Pakai" */
+function cekPromo() {
+    const kode = document.getElementById('promoInput').value.trim().toUpperCase();
+    applyPromo(kode, true);
+}
+
+/** Dipanggil saat pilih dari dropdown */
+function pilihPromoDropdown(kode) {
+    if (!kode) {
+        // Reset
+        promoData = null;
+        document.getElementById('promoInput').value = '';
+        document.getElementById('promoInput').className = 'promo-input';
+        document.getElementById('promoMsg').textContent = '';
+        updateTotals();
+        return;
+    }
+    document.getElementById('promoInput').value = kode;
+    applyPromo(kode, true);
+}
+
+function showPromoMsg(msg, type) {
+    const el = document.getElementById('promoMsg');
+    el.textContent = msg;
+    el.className = 'promo-msg ' + type;
+}
+
+/* ══════════════════════════════════════
+   TOTALS
+══════════════════════════════════════ */
+function updateTotals() {
+    const sub    = getSubtotal();
+    const diskon = promoData ? promoData.diskon : 0;
+    const total  = Math.max(0, sub - diskon);
+
+    document.getElementById('subtotalText').textContent = 'Rp ' + formatRp(sub);
+    document.getElementById('totalText').textContent    = 'Rp ' + formatRp(total);
+
+    const row = document.getElementById('diskonRow');
+    if (diskon > 0) {
+        row.style.display = 'flex';
+        document.getElementById('diskonText').textContent = '- Rp ' + formatRp(diskon);
+    } else {
+        row.style.display = 'none';
+    }
+}
 
 /* ══════════════════════════════════════
    MODAL: Menu Detail
@@ -927,7 +1088,7 @@ function addToCartFromModal() {
 
     bootstrap.Modal.getInstance(document.getElementById('modalMenu'))?.hide();
     renderCart();
-    recalcPromo();
+    recalcPromo(); // ✅ Sekarang fungsi ini ada dan bekerja
 }
 
 /* ══════════════════════════════════════
@@ -943,6 +1104,12 @@ function renderCart() {
         empty.style.display = 'flex';
         badge.textContent   = '0';
         btn.disabled        = true;
+        // Reset promo kalau cart dikosongkan
+        promoData = null;
+        document.getElementById('promoInput').value = '';
+        document.getElementById('promoInput').className = 'promo-input';
+        document.getElementById('promoMsg').textContent = '';
+        document.getElementById('promoSelect').value = '';
         updateTotals();
         return;
     }
@@ -951,7 +1118,6 @@ function renderCart() {
     badge.textContent   = cart.reduce((s, c) => s + c.qty, 0);
     btn.disabled        = false;
 
-    // Hapus item lama kecuali cartEmpty
     Array.from(wrap.children).forEach(el => { if (!el.id) el.remove(); });
 
     cart.forEach((item, idx) => {
@@ -983,95 +1149,7 @@ function changeCartQty(idx, delta) {
     cart[idx].qty += delta;
     if (cart[idx].qty <= 0) cart.splice(idx, 1);
     renderCart();
-    recalcPromo();
-}
-
-/* ══════════════════════════════════════
-   TOTALS
-══════════════════════════════════════ */
-function getSubtotal() {
-    return cart.reduce((s, c) => s + c.harga * c.qty, 0);
-}
-
-function updateTotals() {
-    const sub    = getSubtotal();
-    const diskon = promoData ? promoData.diskon : 0;
-    const total  = Math.max(0, sub - diskon);
-
-    document.getElementById('subtotalText').textContent = 'Rp ' + formatRp(sub);
-    document.getElementById('totalText').textContent    = 'Rp ' + formatRp(total);
-
-    const row = document.getElementById('diskonRow');
-    if (diskon > 0) {
-        row.style.display = 'flex';
-        document.getElementById('diskonText').textContent = '- Rp ' + formatRp(diskon);
-    } else {
-        row.style.display = 'none';
-    }
-}
-
-/* ══════════════════════════════════════
-    PROMO (SINKRON DENGAN CART)
-══════════════════════════════════════ */
-async function cekPromo() {
-    const kodeInput = document.getElementById('promoInput');
-    const kode = kodeInput.value.trim().toUpperCase();
-    const subtotal = getSubtotal(); // Menggunakan fungsi getSubtotal yang sudah kamu punya
-
-    if (!kode) {
-        promoData = null;
-        showPromoMsg('Masukkan kode promo!', 'error');
-        updateTotals();
-        return;
-    }
-
-    try {
-        // Gunakan CSRF dari form checkout yang sudah ada di HTML
-        const csrfToken = document.querySelector('input[name="csrf_test_name"]').value;
-
-        const response = await fetch('<?= base_url('transaksi/cek-promo') ?>', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken 
-            },
-            body: JSON.stringify({
-                kode_promo: kode,
-                subtotal: subtotal
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.valid || data.success) {
-            // SINKRONISASI KE STATE GLOBAL
-            promoData = {
-                id_promo: data.id_promo,
-                diskon: parseFloat(data.diskon)
-            };
-            
-            showPromoMsg(data.message, 'success');
-            kodeInput.classList.add('valid');
-            kodeInput.classList.remove('invalid');
-        } else {
-            promoData = null;
-            showPromoMsg(data.message, 'error');
-            kodeInput.classList.add('invalid');
-            kodeInput.classList.remove('valid');
-        }
-        
-        // Panggil updateTotals agar tampilan harga berubah
-        updateTotals();
-
-    } catch (error) {
-        console.error(error);
-        showPromoMsg('Gagal memverifikasi promo.', 'error');
-    }
-}
-
-function calculateSubtotal() {
-    return getSubtotal();
+    recalcPromo(); // ✅ Re-check promo setiap kali qty berubah
 }
 
 /* ══════════════════════════════════════
@@ -1095,7 +1173,6 @@ function openPaymentModal() {
         disRow.style.display = 'none';
     }
 
-    // Order summary
     let summaryHtml = '';
     cart.forEach(item => {
         summaryHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; color:#444;">
@@ -1105,7 +1182,6 @@ function openPaymentModal() {
     });
     document.getElementById('payOrderSummary').innerHTML = summaryHtml;
 
-    // Reset cash input
     document.getElementById('payJumlahBayar').value = '';
     document.getElementById('payKembalian').textContent = 'Rp 0';
     selectPayMethod(document.querySelector('.pay-method-btn[data-method="cash"]'), 'cash');
@@ -1117,9 +1193,7 @@ function selectPayMethod(el, method) {
     metodeBayar = method;
     document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
-
-    const cashWrap = document.getElementById('cashWrap');
-    cashWrap.style.display = method === 'cash' ? 'block' : 'none';
+    document.getElementById('cashWrap').style.display = method === 'cash' ? 'block' : 'none';
 }
 
 function hitungKembalian() {
@@ -1127,8 +1201,7 @@ function hitungKembalian() {
     const diskon = promoData ? promoData.diskon : 0;
     const total  = Math.max(0, sub - diskon);
     const bayar  = parseFloat(document.getElementById('payJumlahBayar').value) || 0;
-    const kembal = Math.max(0, bayar - total);
-    document.getElementById('payKembalian').textContent = 'Rp ' + formatRp(kembal);
+    document.getElementById('payKembalian').textContent = 'Rp ' + formatRp(Math.max(0, bayar - total));
 }
 
 function confirmPayment() {
@@ -1148,7 +1221,6 @@ function confirmPayment() {
         }
     }
 
-    // Isi form hidden
     document.getElementById('fIdTable').value      = document.getElementById('selectTable').value;
     document.getElementById('fIdPromo').value      = promoData ? promoData.id_promo : '';
     document.getElementById('fNamaCustomer').value = nama;
@@ -1195,8 +1267,8 @@ function filterMenu() {
    RESET POS
 ══════════════════════════════════════ */
 function resetPOS() {
-    cart       = [];
-    promoData  = null;
+    cart      = [];
+    promoData = null;
     document.getElementById('promoInput').value     = '';
     document.getElementById('promoInput').className = 'promo-input';
     document.getElementById('promoMsg').textContent = '';
@@ -1204,13 +1276,6 @@ function resetPOS() {
     document.getElementById('selectTable').value    = '';
     bootstrap.Modal.getInstance(document.getElementById('modalSuccess'))?.hide();
     renderCart();
-}
-
-/* ══════════════════════════════════════
-   HELPER
-══════════════════════════════════════ */
-function formatRp(n) {
-    return Number(n).toLocaleString('id-ID');
 }
 
 // Init
