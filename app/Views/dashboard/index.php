@@ -153,7 +153,7 @@
     .cal-nav-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 14px; color: var(--dark); }
 
     /* CHART */
-    .chart-wrap { position: relative; height: 220px; }
+    .chart-wrap { position: relative; height: 420px; }
 
     /* INCOME BARS */
     .income-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f7; font-size: 13.5px; }
@@ -401,6 +401,8 @@ $daysInMonth     = (int)$now->format('t');
 
 <!-- CHART JS -->
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+
 (function() {
     const labels = <?= $grafikLabel ?>;
     const data   = <?= $grafikData ?>;
@@ -442,7 +444,9 @@ $daysInMonth     = (int)$now->format('t');
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: { font: { size:11, family:'DM Sans' }, color:'#8A8FAB', maxTicksLimit:10, maxRotation:0 }
+                    ticks: { font: { size:11, family:'DM Sans' }, color:'#8A8FAB', maxTicksLimit:10, maxRotation:0 },
+                    bounds: 'ticks',
+                    offset: true,
                 },
                 y: {
                     grid: { color:'#ECEEF5', lineWidth:1 },
@@ -463,7 +467,7 @@ $daysInMonth     = (int)$now->format('t');
 })();
 
 // ── Dynamic Calendar ──────────────────────────────────
-const hariAktif   = <?= json_encode($hariAktif) ?>;
+const hariAktif = <?= json_encode($hariAktif) ?>.map(Number);
 const todayReal   = new Date();
 let   calYear     = todayReal.getFullYear();
 let   calMonth    = todayReal.getMonth(); // 0-based
@@ -509,7 +513,10 @@ function renderCalendar() {
 
 function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderCalendar(); }
 function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderCalendar(); }
+window.calPrev = calPrev;
+window.calNext = calNext;
 
 renderCalendar();
 
+}); // end DOMContentLoaded
 </script>
