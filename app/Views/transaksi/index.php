@@ -968,7 +968,7 @@
 </div>
 
 
-<!-- ══ Form tersembunyi untuk submit checkout ══ -->
+<!-- ══ Form untuk checkout ══ -->
 <form id="formCheckout" action="<?= base_url('transaksi/checkout') ?>" method="POST" style="display:none;">
     <?= csrf_field() ?>
     <input type="hidden" name="id_table"        id="fIdTable">
