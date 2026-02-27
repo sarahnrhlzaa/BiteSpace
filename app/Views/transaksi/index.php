@@ -939,9 +939,6 @@
 </div>
 
 
-<!-- ══════════════════════════════════════════════
-     MODAL: Pesanan Selesai 🎉
-══════════════════════════════════════════════ -->
 <div class="modal fade" id="modalSuccess" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" style="max-width:340px;">
         <div class="modal-content" style="border-radius:18px; border:none; text-align:center;">
