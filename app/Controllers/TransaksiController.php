@@ -209,7 +209,7 @@ class TransaksiController extends BaseController
 
         // ── Update status meja → available ──
         if (! empty($post['id_table'])) {
-            $this->tableModel->update($post['id_table'], ['status' => 'available']);
+            $this->tableModel->update($post['id_table'], ['status' => 'occupied']);
         }
 
         return redirect()->to(base_url('transaksi/struk/' . $idOrder));

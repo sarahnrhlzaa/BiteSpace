@@ -407,20 +407,6 @@
 .promo-msg.success { color: #22c55e; }
 .promo-msg.error   { color: #ef4444; }
 
-.promo-select {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    padding: 7px 12px;
-    font-size: 12.5px;
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--dark);
-    margin-bottom: 6px;
-    transition: border-color 0.2s;
-}
-.promo-select:focus { outline: none; border-color: var(--sky); background: #fff; }
-
 .btn-checkout {
     width: 100%;
     padding: 13px;
@@ -533,6 +519,11 @@
     .pos-left { height: 60vh; }
     .pos-right { min-height: 400px; }
 }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 </style>
 
 <div class="pos-wrap">
@@ -632,23 +623,8 @@
         <!-- Cart Footer -->
         <div class="cart-footer">
             <!-- Promo -->
-            <select class="promo-select" id="promoSelect" onchange="pilihPromoDropdown(this.value)">
-                <option value="">🎫 Pilih promo tersedia...</option>
-                <?php foreach ($promosAktif as $p): ?>
-                <option value="<?= esc($p['kode_promo']) ?>"
-                        data-nama="<?= esc($p['nama_promo']) ?>"
-                        data-tipe="<?= esc($p['tipe_diskon']) ?>"
-                        data-nilai="<?= esc($p['nilai_diskon']) ?>"
-                        data-maks="<?= esc($p['maks_diskon'] ?? 0) ?>"
-                        data-min="<?= esc($p['min_transaksi']) ?>"
-                        data-id="<?= esc($p['id_promo']) ?>">
-                    <?= esc($p['kode_promo']) ?> — <?= esc($p['nama_promo']) ?>
-                    (<?= $p['tipe_diskon'] === 'percent' ? $p['nilai_diskon'].'%' : 'Rp '.number_format($p['nilai_diskon'],0,',','.') ?>)
-                </option>
-                <?php endforeach; ?>
-            </select>
             <div class="promo-row">
-                <input type="text" class="promo-input" id="promoInput" placeholder="Atau ketik kode promo..." maxlength="20">
+                <input type="text" class="promo-input" id="promoInput" placeholder="Kode Promo" maxlength="20">
                 <button type="button" class="btn btn-sm" id="promoBtn"
                         style="border-radius:10px; background:linear-gradient(135deg,var(--sky),var(--tosca)); color:#fff; font-weight:600; font-size:12px; padding:0 14px; border:none; white-space:nowrap;"
                         onclick="cekPromo()">
@@ -1011,67 +987,53 @@ function updateTotals() {
 }
 
 /* ══════════════════════════════════════
-    PROMO (SINKRON DENGAN CART)
+   PROMO
 ══════════════════════════════════════ */
 async function cekPromo() {
-    const kodeInput = document.getElementById('promoInput');
-    const kode = kodeInput.value.trim().toUpperCase();
-    const subtotal = getSubtotal(); // Menggunakan fungsi getSubtotal yang sudah kamu punya
+    const kode    = document.getElementById('promoInput').value.trim();
+    const msgEl   = document.getElementById('promoMsg');
+    const inputEl = document.getElementById('promoInput');
+    if (! kode) return;
 
-    if (!kode) {
-        promoData = null;
-        showPromoMsg('Masukkan kode promo!', 'error');
-        updateTotals();
+    const sub = getSubtotal();
+    if (sub === 0) {
+        msgEl.className = 'promo-msg error';
+        msgEl.textContent = 'Tambahkan menu dulu sebelum pakai promo.';
         return;
     }
 
     try {
-        // Gunakan CSRF dari form checkout yang sudah ada di HTML
-        const csrfToken = document.querySelector('input[name="csrf_test_name"]').value;
-
-        const response = await fetch('<?= base_url('transaksi/cek-promo') ?>', {
+        const res = await fetch('<?= base_url('transaksi/cek-promo') ?>', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': csrfToken 
-            },
-            body: JSON.stringify({
-                kode_promo: kode,
-                subtotal: subtotal
-            })
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify({ kode_promo: kode, subtotal: sub })
         });
+        const data = await res.json();
 
-        const data = await response.json();
-
-        if (data.valid || data.success) {
-            // SINKRONISASI KE STATE GLOBAL
-            promoData = {
-                id_promo: data.id_promo,
-                diskon: parseFloat(data.diskon)
-            };
-            
-            showPromoMsg(data.message, 'success');
-            kodeInput.classList.add('valid');
-            kodeInput.classList.remove('invalid');
+        if (data.valid) {
+            promoData = data;
+            inputEl.className = 'promo-input valid';
+            msgEl.className   = 'promo-msg success';
+            msgEl.textContent = '✓ ' + data.message + ' (Diskon: Rp ' + formatRp(data.diskon) + ')';
         } else {
             promoData = null;
-            showPromoMsg(data.message, 'error');
-            kodeInput.classList.add('invalid');
-            kodeInput.classList.remove('valid');
+            inputEl.className = 'promo-input invalid';
+            msgEl.className   = 'promo-msg error';
+            msgEl.textContent = '✗ ' + data.message;
         }
-        
-        // Panggil updateTotals agar tampilan harga berubah
-        updateTotals();
-
-    } catch (error) {
-        console.error(error);
-        showPromoMsg('Gagal memverifikasi promo.', 'error');
+    } catch (e) {
+        msgEl.className   = 'promo-msg error';
+        msgEl.textContent = 'Gagal mengecek promo.';
     }
+    updateTotals();
 }
 
-function calculateSubtotal() {
-    return getSubtotal();
+function recalcPromo() {
+    if (!promoData) { updateTotals(); return; }
+    // Recalculate diskon kalau subtotal berubah
+    const sub = getSubtotal();
+    // Fetch ulang agar akurat
+    cekPromo();
 }
 
 /* ══════════════════════════════════════
@@ -1079,6 +1041,37 @@ function calculateSubtotal() {
 ══════════════════════════════════════ */
 function openPaymentModal() {
     if (cart.length === 0) return;
+
+    // Validasi meja wajib diisi
+    if (! document.getElementById('selectTable').value) {
+        const toast = document.createElement('div');
+        toast.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>Nomor meja belum dipilih!`;
+        toast.style.cssText = `
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff; padding: 12px 22px; border-radius: 12px;
+            font-size: 13.5px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+            box-shadow: 0 6px 24px rgba(239,68,68,0.4);
+            z-index: 9999; white-space: nowrap;
+            animation: slideUp 0.25s ease;
+        `;
+        document.body.appendChild(toast);
+
+        // Highlight dropdown meja
+        const sel = document.getElementById('selectTable');
+        sel.style.borderColor = '#ef4444';
+        sel.style.boxShadow   = '0 0 0 3px rgba(239,68,68,0.15)';
+        sel.focus();
+
+        setTimeout(() => {
+            toast.style.opacity    = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+            sel.style.borderColor = '';
+            sel.style.boxShadow   = '';
+        }, 2500);
+        return;
+    }
 
     const sub    = getSubtotal();
     const diskon = promoData ? promoData.diskon : 0;
@@ -1200,7 +1193,6 @@ function resetPOS() {
     document.getElementById('promoInput').value     = '';
     document.getElementById('promoInput').className = 'promo-input';
     document.getElementById('promoMsg').textContent = '';
-    document.getElementById('promoSelect').value    = '';
     document.getElementById('selectTable').value    = '';
     bootstrap.Modal.getInstance(document.getElementById('modalSuccess'))?.hide();
     renderCart();
