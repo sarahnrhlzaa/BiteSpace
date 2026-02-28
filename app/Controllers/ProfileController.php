@@ -74,7 +74,7 @@ class ProfileController extends BaseController
         // Update session nama_lengkap biar langsung keupdate di sidebar
         session()->set('nama_lengkap', $this->request->getPost('nama_lengkap'));
 
-        return redirect()->to('/profile')->with('success', 'Profil berhasil diperbarui!');
+        return redirect()->to('/profile')->with('success', 'Profile berhasil diperbarui!');
     }
 
     // ── Ganti password ──

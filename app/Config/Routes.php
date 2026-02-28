@@ -25,8 +25,6 @@ $routes->group("", ["filter" => "auth"], function($routes) {
 
     // Transaksi (admin & kasir)
     $routes->get("transaksi",              "TransaksiController::index");
-    $routes->post("transaksi/addCart",     "TransaksiController::addCart");
-    $routes->post("transaksi/submit",      "TransaksiController::submit");
     $routes->post("transaksi/checkout",    "TransaksiController::checkout");
     $routes->get("transaksi/struk/(:num)", "TransaksiController::struk/$1");
     $routes->post("transaksi/cek-promo",   "TransaksiController::cekPromo");
@@ -78,18 +76,8 @@ $routes->group("", ["filter" => "auth"], function($routes) {
     $routes->post("payment/process",         "PaymentController::process");
     $routes->get("payment/success/(:num)",   "PaymentController::success/$1");
 
-    // Admin-only routes
+    // Employee
     $routes->group("", ["filter" => "admin"], function($routes) {
-
-        // Category CRUD
-        $routes->get("category",                 "CategoryController::index");
-        $routes->get("category/create",          "CategoryController::create");
-        $routes->post("category/store",          "CategoryController::store");
-        $routes->get("category/edit/(:num)",     "CategoryController::edit/$1");
-        $routes->post("category/update/(:num)",  "CategoryController::update/$1");
-        $routes->post("category/delete/(:num)",  "CategoryController::delete/$1");
-
-        // Employee CRUD
         $routes->get("employee",                        "EmployeeController::index");
         $routes->get("employee/create",                 "EmployeeController::create");
         $routes->post("employee/store",                 "EmployeeController::store");

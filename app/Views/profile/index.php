@@ -200,12 +200,6 @@
     }
 </style>
 
-<?php if (session()->getFlashdata('success')): ?>
-    <div style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; border-radius:11px; padding:12px 16px; margin-bottom:20px; display:flex; gap:10px; align-items:center; font-size:13.5px;">
-        <i class="bi bi-check-circle-fill"></i> <?= session()->getFlashdata('success') ?>
-    </div>
-<?php endif; ?>
-
 <!-- ── HERO ── -->
 <div class="profile-hero">
     <div class="profile-hero-left">
@@ -229,7 +223,7 @@
         </div>
     </div>
     <a href="<?= base_url('profile/edit') ?>" class="btn-edit-profile">
-        <i class="bi bi-pencil-square"></i> Edit Profil
+        <i class="bi bi-pencil-square"></i> Edit Profile
     </a>
 </div>
 

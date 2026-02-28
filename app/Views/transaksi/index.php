@@ -1,10 +1,3 @@
-<?php
-/**
- * View: transaksi/index.php
- * Simpan di: app/Views/transaksi/index.php
- */
-?>
-
 <style>
 /* ══════════════════════════════════════
    POS LAYOUT
@@ -689,7 +682,7 @@
         <!-- Table Selector -->
         <div class="table-selector">
             <select id="selectTable">
-                <option value="">— Pilih Meja (opsional) —</option>
+                <option value="">— Pilih Meja —</option>
                 <?php foreach ($tables as $t): ?>
                     <option value="<?= $t['id_table'] ?>"><?= esc($t['nomor_meja']) ?> (Kapasitas <?= $t['kapasitas'] ?>)</option>
                 <?php endforeach; ?>
@@ -1164,7 +1157,7 @@ async function applyPromo(kode, verbose = true) {
     }
 
     try {
-        const res = await fetch('<?= base_url('promo/validate-kode') ?>', {
+        const res = await fetch('<?= base_url('transaksi/cek-promo') ?>', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -1179,7 +1172,7 @@ async function applyPromo(kode, verbose = true) {
 
         const data = await res.json();
 
-        if (data.success) {
+        if (data.valid) {
             promoData = {
                 kode     : kode.toUpperCase(),
                 id_promo : data.id_promo,

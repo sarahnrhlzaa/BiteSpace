@@ -226,21 +226,16 @@
         gap: 6px;
     }
     .syarat-title i { color: var(--tosca); }
-
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(14px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
 </style>
 
 <!-- Breadcrumb -->
 <div style="display:flex; align-items:center; gap:8px; margin-bottom:20px; font-size:13px; color:var(--text-muted);">
     <a href="<?= base_url('profile') ?>"
        style="color:var(--tosca); text-decoration:none; font-weight:600; display:flex; align-items:center; gap:5px;">
-        <i class="bi bi-person-circle"></i> Profil
+        <i class="bi bi-person-circle"></i> Profile
     </a>
     <i class="bi bi-chevron-right" style="font-size:11px;"></i>
-    <span>Edit Profil</span>
+    <span>Edit Profile</span>
 </div>
 
 <div class="row g-4">
@@ -252,23 +247,9 @@
                 <div class="form-card-icon" style="background:rgba(46,196,182,0.12);">
                     <i class="bi bi-pencil-square" style="color:var(--tosca);"></i>
                 </div>
-                <div class="form-card-title">Edit Profil</div>
+                <div class="form-card-title">Edit Profile</div>
             </div>
             <div class="form-card-body">
-
-                <?php if (session()->getFlashdata('error')): ?>
-                    <div class="alert-err">
-                        <i class="bi bi-exclamation-circle-fill mt-1"></i>
-                        <div><?= session()->getFlashdata('error') ?></div>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (session()->getFlashdata('success')): ?>
-                    <div style="background:#ECFDF5; border:1px solid #A7F3D0; color:#065F46; border-radius:11px; padding:12px 16px; margin-bottom:18px; display:flex; gap:10px; align-items:center; font-size:13.5px;">
-                        <i class="bi bi-check-circle-fill"></i>
-                        <?= session()->getFlashdata('success') ?>
-                    </div>
-                <?php endif; ?>
 
                 <form action="<?= base_url('profile/update') ?>" method="POST">
                     <?= csrf_field() ?>

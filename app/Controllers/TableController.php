@@ -28,6 +28,17 @@ class TableController extends BaseController
     }
 
     /* ─────────────────────────────────────
+       GET /table/create  →  form tambah meja
+    ───────────────────────────────────── */
+    public function create()
+    {
+        return view('layouts/main', [
+            'title'   => 'Tambah Meja',
+            'content' => 'table/create',
+        ]);
+    }
+
+    /* ─────────────────────────────────────
        GET /table/edit/{id}  →  form edit meja
     ───────────────────────────────────── */
     public function edit(int $id)

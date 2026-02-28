@@ -549,10 +549,10 @@
         <div class="nav-label">Akun</div>
 
         <a href="<?= base_url('profile') ?>"
-           data-color="profile" data-label="Profil Saya"
+           data-color="profile" data-label="Profile Saya"
            class="nav-item <?= str_starts_with(uri_string(), 'profile') ? 'active' : '' ?>">
             <div class="nav-icon"><i class="bi bi-person-circle"></i></div>
-            <span class="nav-text">Profil Saya</span>
+            <span class="nav-text">Profile Saya</span>
         </a>
 
     </nav>
