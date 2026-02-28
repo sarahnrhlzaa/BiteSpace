@@ -382,9 +382,8 @@
 .promo-row {
     display: flex;
     gap: 8px;
-    margin: 10px 0;
+    margin: 8px 0 4px;
 }
-
 .promo-input {
     flex: 1;
     border: 1.5px solid var(--border);
@@ -398,14 +397,99 @@
 .promo-input:focus { outline: none; border-color: var(--sky); }
 .promo-input.valid { border-color: #22c55e !important; background: #f0fdf4; }
 .promo-input.invalid { border-color: #ef4444 !important; background: #fef2f2; }
-
 .promo-msg {
     font-size: 11.5px;
     margin-top: 3px;
-    min-height: 16px;
+    min-height: 14px;
 }
 .promo-msg.success { color: #22c55e; }
 .promo-msg.error   { color: #ef4444; }
+
+/* ── Auto-suggest banner ── */
+.promo-suggest-banner {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(46,196,182,0.1), rgba(75,163,195,0.08));
+    border: 1.5px solid rgba(46,196,182,0.35);
+    border-radius: 11px;
+    padding: 9px 12px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.18s;
+    animation: slideDown 0.25s ease;
+}
+.promo-suggest-banner:hover {
+    background: linear-gradient(135deg, rgba(46,196,182,0.18), rgba(75,163,195,0.14));
+    border-color: var(--tosca);
+}
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.promo-suggest-icon { font-size: 20px; flex-shrink: 0; }
+.promo-suggest-text { flex: 1; min-width: 0; }
+.promo-suggest-title {
+    font-size: 12px; font-weight: 700; color: #0d6b63;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.promo-suggest-sub { font-size: 11px; color: #4a9e97; margin-top: 1px; }
+.promo-suggest-cta {
+    font-size: 11px; font-weight: 700; color: #fff;
+    background: var(--tosca); padding: 4px 10px;
+    border-radius: 7px; white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── Applied promo chip ── */
+.promo-applied-chip {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    background: #f0fdf4;
+    border: 1.5px solid #86efac;
+    border-radius: 10px;
+    padding: 7px 10px;
+    margin-bottom: 6px;
+}
+.promo-applied-chip .chip-label {
+    flex: 1; font-size: 12px; font-weight: 700;
+    color: #166534; font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.promo-applied-chip .chip-remove {
+    background: none; border: none; color: #dc2626;
+    font-size: 16px; cursor: pointer; padding: 0 2px;
+    line-height: 1; transition: transform 0.15s;
+}
+.promo-applied-chip .chip-remove:hover { transform: scale(1.2); }
+
+/* ── Promo chips daftar ── */
+.promo-chips-section { margin-bottom: 6px; }
+.promo-chips-toggle {
+    font-size: 11.5px; color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; gap: 4px; padding: 3px 0;
+    user-select: none; font-family: 'DM Sans', sans-serif;
+}
+.promo-chips-toggle:hover { color: var(--sky); }
+.promo-chips-list {
+    display: none; flex-wrap: wrap; gap: 6px;
+    margin-top: 7px; max-height: 90px; overflow-y: auto;
+}
+.promo-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; cursor: pointer;
+    transition: all 0.15s; font-family: 'Plus Jakarta Sans', sans-serif;
+    border: 1.5px solid transparent; white-space: nowrap;
+}
+.promo-chip.eligible {
+    background: rgba(46,196,182,0.1);
+    border-color: rgba(46,196,182,0.4); color: #0d6b63;
+}
+.promo-chip.eligible:hover { background: var(--tosca); color: #fff; border-color: var(--tosca); }
+.promo-chip.ineligible {
+    background: #f5f5f5; border-color: #e5e5e5; color: #bbb; cursor: not-allowed;
+}
 
 .btn-checkout {
     width: 100%;
@@ -622,9 +706,29 @@
 
         <!-- Cart Footer -->
         <div class="cart-footer">
-            <!-- Promo -->
-            <div class="promo-row">
-                <input type="text" class="promo-input" id="promoInput" placeholder="Kode Promo" maxlength="20">
+
+            <!-- ① Auto-suggest: muncul otomatis kalau ada promo eligible -->
+            <div class="promo-suggest-banner" id="promoSuggestBanner" onclick="applyPromoFromSuggest()">
+                <div class="promo-suggest-icon">🎫</div>
+                <div class="promo-suggest-text">
+                    <div class="promo-suggest-title" id="promoSuggestTitle">PROMO tersedia!</div>
+                    <div class="promo-suggest-sub" id="promoSuggestSub">Hemat Rp 0</div>
+                </div>
+                <div class="promo-suggest-cta">Pakai</div>
+            </div>
+
+            <!-- ② Applied chip: muncul kalau promo sudah aktif -->
+            <div class="promo-applied-chip" id="promoAppliedChip">
+                <span>✅</span>
+                <span class="chip-label" id="promoAppliedLabel">PROMO aktif</span>
+                <button class="chip-remove" onclick="removePromo()" title="Hapus promo">×</button>
+            </div>
+
+            <!-- ③ Input manual: untuk kode dari customer -->
+            <div class="promo-row" id="promoInputRow">
+                <input type="text" class="promo-input" id="promoInput"
+                       placeholder="Kode dari pelanggan..." maxlength="20"
+                       oninput="this.value=this.value.toUpperCase()">
                 <button type="button" class="btn btn-sm" id="promoBtn"
                         style="border-radius:10px; background:linear-gradient(135deg,var(--sky),var(--tosca)); color:#fff; font-weight:600; font-size:12px; padding:0 14px; border:none; white-space:nowrap;"
                         onclick="cekPromo()">
@@ -632,6 +736,48 @@
                 </button>
             </div>
             <div class="promo-msg" id="promoMsg"></div>
+
+            <!-- ④ Daftar semua promo: collapsible, kasir bisa lihat semua -->
+            <div class="promo-chips-section" id="promoChipsSection" style="display:none;">
+                <div class="promo-chips-toggle" id="promoChipsToggle" onclick="toggleChipsList()">
+                    <i class="bi bi-tags" style="font-size:11px;"></i>
+                    <span id="promoChipsToggleLabel">Lihat promo tersedia</span>
+                    <i class="bi bi-chevron-down" id="promoChipsChevron" style="font-size:10px; margin-left:auto;"></i>
+                </div>
+                <div class="promo-chips-list" id="promoChipsList">
+                    <?php foreach ($promosAktif as $p): ?>
+                    <span class="promo-chip ineligible"
+                          data-kode="<?= esc($p['kode_promo']) ?>"
+                          data-nama="<?= esc($p['nama_promo']) ?>"
+                          data-min="<?= (int)$p['min_transaksi'] ?>"
+                          data-nilai="<?= esc($p['nilai_diskon']) ?>"
+                          data-tipe="<?= esc($p['tipe_diskon']) ?>"
+                          data-id="<?= esc($p['id_promo']) ?>"
+                          onclick="chipClick(this)"
+                          title="Min. Rp <?= number_format($p['min_transaksi'],0,',','.') ?>">
+                        <?= esc($p['kode_promo']) ?>
+                        <span class="chip-info">
+                            (<?= $p['tipe_diskon']==='percent' ? $p['nilai_diskon'].'%' : 'Rp '.number_format($p['nilai_diskon'],0,',','.') ?>)
+                        </span>
+                    </span>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+
+            <!-- Data promo untuk JS (hidden) -->
+            <script>
+            const PROMOS_AKTIF = <?= json_encode(array_map(function($p) {
+                return [
+                    'kode'      => $p['kode_promo'],
+                    'nama'      => $p['nama_promo'],
+                    'tipe'      => $p['tipe_diskon'],
+                    'nilai'     => (float)$p['nilai_diskon'],
+                    'maks'      => (float)($p['maks_diskon'] ?? 0),
+                    'min'       => (float)$p['min_transaksi'],
+                    'id_promo'  => $p['id_promo'],
+                ];
+            }, $promosAktif)) ?>;
+            </script>
 
             <!-- Summary -->
             <div class="cart-summary-row">
@@ -798,9 +944,6 @@
 </div>
 
 
-<!-- ══════════════════════════════════════════════
-     MODAL: Pesanan Selesai 🎉
-══════════════════════════════════════════════ -->
 <div class="modal fade" id="modalSuccess" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" style="max-width:340px;">
         <div class="modal-content" style="border-radius:18px; border:none; text-align:center;">
@@ -830,7 +973,7 @@
 </div>
 
 
-<!-- ══ Form tersembunyi untuk submit checkout ══ -->
+<!-- ══ Form untuk checkout ══ -->
 <form id="formCheckout" action="<?= base_url('transaksi/checkout') ?>" method="POST" style="display:none;">
     <?= csrf_field() ?>
     <input type="hidden" name="id_table"        id="fIdTable">
@@ -849,10 +992,295 @@
 /* ══════════════════════════════════════
    STATE
 ══════════════════════════════════════ */
-let cart       = [];          // [{id_menu, nama_menu, harga, qty, gambar, catatan}]
-let promoData  = null;        // {id_promo, nama_promo, diskon}
-let modalMenu  = null;        // menu yg sedang dibuka di modal
+let cart        = [];
+let promoData   = null; // {kode, id_promo, diskon, nama}
+let modalMenu   = null;
 let metodeBayar = 'cash';
+let chipsOpen   = false;
+let suggestKode = null; // promo terbaik yang eligible saat ini
+
+/* ══════════════════════════════════════
+   HELPER
+══════════════════════════════════════ */
+function formatRp(n) { return Number(n).toLocaleString('id-ID'); }
+
+function getSubtotal() {
+    return cart.reduce((s, c) => s + c.harga * c.qty, 0);
+}
+
+function getCsrfToken() {
+    const el = document.querySelector('#formCheckout input[name^="csrf"]');
+    return el ? el.value : '';
+}
+function getCsrfName() {
+    const el = document.querySelector('#formCheckout input[name^="csrf"]');
+    return el ? el.name : 'csrf_test_name';
+}
+
+/* ══════════════════════════════════════
+   PROMO CORE
+══════════════════════════════════════ */
+
+/**
+ * Dipanggil setiap cart berubah.
+ * 1. Update chip eligibility
+ * 2. Cek auto-suggest promo terbaik
+ * 3. Re-hitung diskon kalau promo sudah applied
+ */
+function recalcPromo() {
+    const subtotal = getSubtotal();
+    updateChipEligibility(subtotal);
+    checkAutoSuggest(subtotal);
+
+    if (!promoData) {
+        updateTotals();
+        return;
+    }
+    // Re-validate applied promo terhadap subtotal baru (silent)
+    applyPromo(promoData.kode, false);
+}
+
+/**
+ * Cek promo mana yang paling menguntungkan & eligible → tampilkan banner
+ */
+function checkAutoSuggest(subtotal) {
+    if (!PROMOS_AKTIF || PROMOS_AKTIF.length === 0) return;
+    if (promoData) {
+        // Kalau sudah ada promo applied, sembunyikan suggest
+        document.getElementById('promoSuggestBanner').style.display = 'none';
+        suggestKode = null;
+        return;
+    }
+    if (subtotal === 0) {
+        document.getElementById('promoSuggestBanner').style.display = 'none';
+        suggestKode = null;
+        return;
+    }
+
+    // Cari promo yang eligible dan hitung diskonnya
+    let best = null;
+    let bestDiskon = 0;
+
+    PROMOS_AKTIF.forEach(p => {
+        if (subtotal < p.min) return; // tidak eligible
+        let diskon = 0;
+        if (p.tipe === 'percent') {
+            diskon = subtotal * (p.nilai / 100);
+            if (p.maks > 0 && diskon > p.maks) diskon = p.maks;
+        } else {
+            diskon = p.nilai;
+        }
+        diskon = Math.min(diskon, subtotal);
+        if (diskon > bestDiskon) {
+            bestDiskon = diskon;
+            best = p;
+            best._diskon = diskon;
+        }
+    });
+
+    const banner = document.getElementById('promoSuggestBanner');
+    if (best) {
+        suggestKode = best.kode;
+        document.getElementById('promoSuggestTitle').textContent =
+            best.kode + ' — ' + best.nama;
+        document.getElementById('promoSuggestSub').textContent =
+            'Hemat Rp ' + formatRp(best._diskon) + ' untuk pelanggan ini!';
+        banner.style.display = 'flex';
+    } else {
+        banner.style.display = 'none';
+        suggestKode = null;
+    }
+}
+
+/**
+ * Kasir klik banner suggest → langsung apply
+ */
+function applyPromoFromSuggest() {
+    if (!suggestKode) return;
+    document.getElementById('promoInput').value = suggestKode;
+    applyPromo(suggestKode, true);
+}
+
+/**
+ * Update tampilan chip (eligible/ineligible) berdasarkan subtotal
+ */
+function updateChipEligibility(subtotal) {
+    const chips = document.querySelectorAll('.promo-chip');
+    const section = document.getElementById('promoChipsSection');
+    
+    if (chips.length === 0) return;
+    section.style.display = subtotal > 0 ? 'block' : 'none';
+
+    chips.forEach(chip => {
+        const min = parseFloat(chip.dataset.min) || 0;
+        if (subtotal >= min) {
+            chip.className = 'promo-chip eligible';
+            chip.title = 'Klik untuk pakai';
+        } else {
+            chip.className = 'promo-chip ineligible';
+            chip.title = 'Min. transaksi Rp ' + formatRp(min);
+        }
+    });
+}
+
+/**
+ * Kasir klik chip promo dari daftar
+ */
+function chipClick(el) {
+    if (el.classList.contains('ineligible')) return;
+    const kode = el.dataset.kode;
+    document.getElementById('promoInput').value = kode;
+    applyPromo(kode, true);
+    // Tutup list setelah pilih
+    setChipsList(false);
+}
+
+function toggleChipsList() {
+    setChipsList(!chipsOpen);
+}
+
+function setChipsList(open) {
+    chipsOpen = open;
+    const list = document.getElementById('promoChipsList');
+    const chevron = document.getElementById('promoChipsChevron');
+    const label = document.getElementById('promoChipsToggleLabel');
+    list.style.display = open ? 'flex' : 'none';
+    chevron.className = open ? 'bi bi-chevron-up' : 'bi bi-chevron-down';
+    chevron.style.fontSize = '10px';
+    chevron.style.marginLeft = 'auto';
+    label.textContent = open ? 'Sembunyikan' : 'Lihat promo tersedia';
+}
+
+/**
+ * Core apply promo → fetch ke server
+ */
+async function applyPromo(kode, verbose = true) {
+    const subtotal = getSubtotal();
+
+    if (!kode || subtotal === 0) {
+        promoData = null;
+        updateTotals();
+        return;
+    }
+
+    try {
+        const res = await fetch('<?= base_url('promo/validate-kode') ?>', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+            body: JSON.stringify({
+                kode_promo: kode.toUpperCase(),
+                subtotal: subtotal,
+                [getCsrfName()]: getCsrfToken(),
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            promoData = {
+                kode     : kode.toUpperCase(),
+                id_promo : data.id_promo,
+                diskon   : parseFloat(data.diskon),
+                nama     : data.nama_promo,
+            };
+
+            // Tampilkan applied chip
+            showAppliedChip(promoData);
+
+            if (verbose) {
+                showPromoMsg('✅ ' + data.message, 'success');
+                document.getElementById('promoInput').classList.add('valid');
+                document.getElementById('promoInput').classList.remove('invalid');
+            }
+        } else {
+            // Promo gagal
+            const wasApplied = !!promoData;
+            promoData = null;
+            hideAppliedChip();
+
+            if (verbose) {
+                showPromoMsg('❌ ' + data.message, 'error');
+                document.getElementById('promoInput').classList.add('invalid');
+                document.getElementById('promoInput').classList.remove('valid');
+            } else if (wasApplied) {
+                // Silent: promo dihapus karena subtotal turun di bawah minimum
+                showPromoMsg('⚠️ Promo dihapus: ' + data.message, 'error');
+                document.getElementById('promoInput').value = '';
+                document.getElementById('promoInput').className = 'promo-input';
+            }
+        }
+
+        updateTotals();
+        checkAutoSuggest(subtotal); // refresh suggest
+
+    } catch (err) {
+        console.error('Promo error:', err);
+        if (verbose) showPromoMsg('Gagal memverifikasi promo.', 'error');
+    }
+}
+
+/** Dipanggil tombol "Pakai" */
+function cekPromo() {
+    const kode = document.getElementById('promoInput').value.trim().toUpperCase();
+    applyPromo(kode, true);
+}
+
+/** Hapus promo yang sudah applied */
+function removePromo() {
+    promoData = null;
+    document.getElementById('promoInput').value = '';
+    document.getElementById('promoInput').className = 'promo-input';
+    document.getElementById('promoMsg').textContent = '';
+    hideAppliedChip();
+    updateTotals();
+    recalcPromo(); // refresh suggest
+}
+
+function showAppliedChip(promo) {
+    const chip = document.getElementById('promoAppliedChip');
+    document.getElementById('promoAppliedLabel').textContent =
+        '🎫 ' + promo.kode + ' — Hemat Rp ' + formatRp(promo.diskon);
+    chip.style.display = 'flex';
+    document.getElementById('promoSuggestBanner').style.display = 'none';
+    document.getElementById('promoInputRow').style.display = 'none';
+    document.getElementById('promoChipsSection').style.display = 'none';
+}
+
+function hideAppliedChip() {
+    document.getElementById('promoAppliedChip').style.display = 'none';
+    document.getElementById('promoInputRow').style.display = 'flex';
+    const subtotal = getSubtotal();
+    if (subtotal > 0) document.getElementById('promoChipsSection').style.display = 'block';
+}
+
+function showPromoMsg(msg, type) {
+    const el = document.getElementById('promoMsg');
+    el.textContent = msg;
+    el.className = 'promo-msg ' + type;
+}
+
+/* ══════════════════════════════════════
+   TOTALS
+══════════════════════════════════════ */
+function updateTotals() {
+    const sub    = getSubtotal();
+    const diskon = promoData ? promoData.diskon : 0;
+    const total  = Math.max(0, sub - diskon);
+
+    document.getElementById('subtotalText').textContent = 'Rp ' + formatRp(sub);
+    document.getElementById('totalText').textContent    = 'Rp ' + formatRp(total);
+
+    const row = document.getElementById('diskonRow');
+    if (diskon > 0) {
+        row.style.display = 'flex';
+        document.getElementById('diskonText').textContent = '- Rp ' + formatRp(diskon);
+    } else {
+        row.style.display = 'none';
+    }
+}
 
 /* ══════════════════════════════════════
    MODAL: Menu Detail
@@ -919,6 +1347,13 @@ function renderCart() {
         empty.style.display = 'flex';
         badge.textContent   = '0';
         btn.disabled        = true;
+        promoData = null;
+        document.getElementById('promoInput').value = '';
+        document.getElementById('promoInput').className = 'promo-input';
+        document.getElementById('promoMsg').textContent = '';
+        hideAppliedChip();
+        document.getElementById('promoSuggestBanner').style.display = 'none';
+        document.getElementById('promoChipsSection').style.display = 'none';
         updateTotals();
         return;
     }
@@ -927,7 +1362,6 @@ function renderCart() {
     badge.textContent   = cart.reduce((s, c) => s + c.qty, 0);
     btn.disabled        = false;
 
-    // Hapus item lama kecuali cartEmpty
     Array.from(wrap.children).forEach(el => { if (!el.id) el.remove(); });
 
     cart.forEach((item, idx) => {
@@ -960,80 +1394,6 @@ function changeCartQty(idx, delta) {
     if (cart[idx].qty <= 0) cart.splice(idx, 1);
     renderCart();
     recalcPromo();
-}
-
-/* ══════════════════════════════════════
-   TOTALS
-══════════════════════════════════════ */
-function getSubtotal() {
-    return cart.reduce((s, c) => s + c.harga * c.qty, 0);
-}
-
-function updateTotals() {
-    const sub    = getSubtotal();
-    const diskon = promoData ? promoData.diskon : 0;
-    const total  = Math.max(0, sub - diskon);
-
-    document.getElementById('subtotalText').textContent = 'Rp ' + formatRp(sub);
-    document.getElementById('totalText').textContent    = 'Rp ' + formatRp(total);
-
-    const row = document.getElementById('diskonRow');
-    if (diskon > 0) {
-        row.style.display = 'flex';
-        document.getElementById('diskonText').textContent = '- Rp ' + formatRp(diskon);
-    } else {
-        row.style.display = 'none';
-    }
-}
-
-/* ══════════════════════════════════════
-   PROMO
-══════════════════════════════════════ */
-async function cekPromo() {
-    const kode    = document.getElementById('promoInput').value.trim();
-    const msgEl   = document.getElementById('promoMsg');
-    const inputEl = document.getElementById('promoInput');
-    if (! kode) return;
-
-    const sub = getSubtotal();
-    if (sub === 0) {
-        msgEl.className = 'promo-msg error';
-        msgEl.textContent = 'Tambahkan menu dulu sebelum pakai promo.';
-        return;
-    }
-
-    try {
-        const res = await fetch('<?= base_url('transaksi/cek-promo') ?>', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
-            body: JSON.stringify({ kode_promo: kode, subtotal: sub })
-        });
-        const data = await res.json();
-
-        if (data.valid) {
-            promoData = data;
-            inputEl.className = 'promo-input valid';
-            msgEl.className   = 'promo-msg success';
-            msgEl.textContent = '✓ ' + data.message + ' (Diskon: Rp ' + formatRp(data.diskon) + ')';
-        } else {
-            promoData = null;
-            inputEl.className = 'promo-input invalid';
-            msgEl.className   = 'promo-msg error';
-            msgEl.textContent = '✗ ' + data.message;
-        }
-    } catch (e) {
-        msgEl.className   = 'promo-msg error';
-        msgEl.textContent = 'Gagal mengecek promo.';
-    }
-    updateTotals();
-}
-
-function recalcPromo() {
-    if (!promoData) { updateTotals(); return; }
-    // Recalculate diskon kalau subtotal berubah
-    const sub = getSubtotal();
-    // Fetch ulang agar akurat
-    cekPromo();
 }
 
 /* ══════════════════════════════════════
@@ -1088,7 +1448,6 @@ function openPaymentModal() {
         disRow.style.display = 'none';
     }
 
-    // Order summary
     let summaryHtml = '';
     cart.forEach(item => {
         summaryHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; color:#444;">
@@ -1098,7 +1457,6 @@ function openPaymentModal() {
     });
     document.getElementById('payOrderSummary').innerHTML = summaryHtml;
 
-    // Reset cash input
     document.getElementById('payJumlahBayar').value = '';
     document.getElementById('payKembalian').textContent = 'Rp 0';
     selectPayMethod(document.querySelector('.pay-method-btn[data-method="cash"]'), 'cash');
@@ -1110,9 +1468,7 @@ function selectPayMethod(el, method) {
     metodeBayar = method;
     document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('active'));
     el.classList.add('active');
-
-    const cashWrap = document.getElementById('cashWrap');
-    cashWrap.style.display = method === 'cash' ? 'block' : 'none';
+    document.getElementById('cashWrap').style.display = method === 'cash' ? 'block' : 'none';
 }
 
 function hitungKembalian() {
@@ -1120,8 +1476,7 @@ function hitungKembalian() {
     const diskon = promoData ? promoData.diskon : 0;
     const total  = Math.max(0, sub - diskon);
     const bayar  = parseFloat(document.getElementById('payJumlahBayar').value) || 0;
-    const kembal = Math.max(0, bayar - total);
-    document.getElementById('payKembalian').textContent = 'Rp ' + formatRp(kembal);
+    document.getElementById('payKembalian').textContent = 'Rp ' + formatRp(Math.max(0, bayar - total));
 }
 
 function confirmPayment() {
@@ -1141,7 +1496,6 @@ function confirmPayment() {
         }
     }
 
-    // Isi form hidden
     document.getElementById('fIdTable').value      = document.getElementById('selectTable').value;
     document.getElementById('fIdPromo').value      = promoData ? promoData.id_promo : '';
     document.getElementById('fNamaCustomer').value = nama;
@@ -1188,21 +1542,18 @@ function filterMenu() {
    RESET POS
 ══════════════════════════════════════ */
 function resetPOS() {
-    cart       = [];
-    promoData  = null;
-    document.getElementById('promoInput').value     = '';
+    cart      = [];
+    promoData = null;
+    suggestKode = null;
+    document.getElementById('promoInput').value = '';
     document.getElementById('promoInput').className = 'promo-input';
     document.getElementById('promoMsg').textContent = '';
-    document.getElementById('selectTable').value    = '';
+    document.getElementById('selectTable').value = '';
+    hideAppliedChip();
+    document.getElementById('promoSuggestBanner').style.display = 'none';
+    document.getElementById('promoChipsSection').style.display = 'none';
     bootstrap.Modal.getInstance(document.getElementById('modalSuccess'))?.hide();
     renderCart();
-}
-
-/* ══════════════════════════════════════
-   HELPER
-══════════════════════════════════════ */
-function formatRp(n) {
-    return Number(n).toLocaleString('id-ID');
 }
 
 // Init

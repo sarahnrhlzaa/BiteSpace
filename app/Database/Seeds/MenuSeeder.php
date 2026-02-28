@@ -54,7 +54,7 @@ class MenuSeeder extends Seeder
                 'id_category'  => 1,
                 'nama_menu'    => 'Steak',
                 'deskripsi'    => 'Daging sapi lokal 150gr dengan saus lada hitam atau mushroom. Disajikan dengan kentang goreng dan salad.',
-                'gambar'       => '1772096780_d01cb259940724ada1b0.jpg',
+                'gambar'       => '1772174278_ecef54d24b58df23e7fd.jpg',
                 'harga'        => 65000,
                 'is_available' => 1,
                 'created_at'   => date('Y-m-d H:i:s'),
