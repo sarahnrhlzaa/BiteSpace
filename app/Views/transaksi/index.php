@@ -603,6 +603,11 @@
     .pos-left { height: 60vh; }
     .pos-right { min-height: 400px; }
 }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateX(-50%) translateY(12px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
 </style>
 
 <div class="pos-wrap">
@@ -1396,6 +1401,37 @@ function changeCartQty(idx, delta) {
 ══════════════════════════════════════ */
 function openPaymentModal() {
     if (cart.length === 0) return;
+
+    // Validasi meja wajib diisi
+    if (! document.getElementById('selectTable').value) {
+        const toast = document.createElement('div');
+        toast.innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>Nomor meja belum dipilih!`;
+        toast.style.cssText = `
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff; padding: 12px 22px; border-radius: 12px;
+            font-size: 13.5px; font-weight: 600; font-family: 'Plus Jakarta Sans', sans-serif;
+            box-shadow: 0 6px 24px rgba(239,68,68,0.4);
+            z-index: 9999; white-space: nowrap;
+            animation: slideUp 0.25s ease;
+        `;
+        document.body.appendChild(toast);
+
+        // Highlight dropdown meja
+        const sel = document.getElementById('selectTable');
+        sel.style.borderColor = '#ef4444';
+        sel.style.boxShadow   = '0 0 0 3px rgba(239,68,68,0.15)';
+        sel.focus();
+
+        setTimeout(() => {
+            toast.style.opacity    = '0';
+            toast.style.transition = 'opacity 0.3s';
+            setTimeout(() => toast.remove(), 300);
+            sel.style.borderColor = '';
+            sel.style.boxShadow   = '';
+        }, 2500);
+        return;
+    }
 
     const sub    = getSubtotal();
     const diskon = promoData ? promoData.diskon : 0;
